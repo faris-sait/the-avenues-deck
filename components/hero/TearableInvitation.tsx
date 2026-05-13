@@ -9,7 +9,8 @@ const SPACING = 20;            // was 14
 const TEAR_DISTANCE = 90;      // was 64 — scaled with SPACING
 const TEAR_RADIUS = 34;        // was 24 — scaled with SPACING
 const IDLE_AUTO_REVEAL_MS = 14000;
-const PAPER_COLOR = "#ece4d6";
+const PAPER_COLOR = "#c9ccd1";
+const PAPER_INK = "#2a2d31";
 
 interface Props {
   onRevealed: () => void;
@@ -157,7 +158,7 @@ export function TearableInvitation({ onRevealed }: Props) {
       <div className="absolute inset-x-0 top-12 flex justify-center pointer-events-none">
         <p
           className="display text-xs md:text-sm tracking-[0.4em] uppercase"
-          style={{ color: "#5a4e3c" }}
+          style={{ color: PAPER_INK }}
         >
           drag to tear
         </p>
@@ -169,7 +170,7 @@ export function TearableInvitation({ onRevealed }: Props) {
           onRevealed();
         }}
         className="absolute bottom-6 right-6 text-xs uppercase tracking-widest underline-offset-4 hover:underline"
-        style={{ color: "#5a4e3c" }}
+        style={{ color: PAPER_INK }}
       >
         Skip intro →
       </button>
