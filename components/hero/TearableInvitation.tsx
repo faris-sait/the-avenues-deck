@@ -2,13 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Cloth } from "@/lib/cloth-sim/cloth-sim";
 
-const GRAVITY = 0.45;
+const GRAVITY = 0.42;
 const FRICTION = 0.99;
 const ITERATIONS = 4;
-const SPACING = 14;
-const TEAR_DISTANCE = 64;
-const TEAR_RADIUS = 24;
+const SPACING = 20;            // was 14
+const TEAR_DISTANCE = 90;      // was 64 — scaled with SPACING
+const TEAR_RADIUS = 34;        // was 24 — scaled with SPACING
 const IDLE_AUTO_REVEAL_MS = 4000;
+const PAPER_COLOR = "#ece4d6";
 
 interface Props {
   onRevealed: () => void;
@@ -42,10 +43,12 @@ export function TearableInvitation({ onRevealed }: Props) {
     canvas.style.height = `${h}px`;
     ctx.scale(dpr, dpr);
 
-    const cols = Math.floor((w * 0.55) / SPACING);
-    const rows = Math.floor((h * 0.6) / SPACING);
-    const originX = (w - cols * SPACING) / 2;
-    const originY = h * 0.08;
+    // Cover the full viewport with a slight overshoot so torn pieces falling
+    // reveal the page behind rather than a strip of empty canvas at the edges.
+    const cols = Math.ceil(w / SPACING) + 2;
+    const rows = Math.ceil(h / SPACING) + 2;
+    const originX = -SPACING;
+    const originY = -SPACING;
 
     const cloth = new Cloth({
       width: cols,
@@ -97,6 +100,21 @@ export function TearableInvitation({ onRevealed }: Props) {
       cloth.step({ gravity: GRAVITY, friction: FRICTION, iterations: ITERATIONS });
       ctx.clearRect(0, 0, w, h);
 
+      // Paint the paper background first; constraints layered on top give the cloth its weave.
+      // Where constraints are torn, this background fill is also cleared by clipping.
+      ctx.fillStyle = PAPER_COLOR;
+      ctx.beginPath();
+      for (const c of cloth.constraints) {
+        // Build a path through every still-connected segment so we can fill the supported region.
+        ctx.moveTo(c.a.x, c.a.y);
+        ctx.lineTo(c.b.x, c.b.y);
+      }
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = PAPER_COLOR;
+      ctx.lineWidth = SPACING * 1.6;
+      ctx.stroke();
+
       if (
         !revealed &&
         performance.now() - lastInteraction > IDLE_AUTO_REVEAL_MS
@@ -106,15 +124,6 @@ export function TearableInvitation({ onRevealed }: Props) {
           originY + (rows * SPACING) / 2,
           w
         );
-      }
-
-      for (const c of cloth.constraints) {
-        ctx.beginPath();
-        ctx.moveTo(c.a.x, c.a.y);
-        ctx.lineTo(c.b.x, c.b.y);
-        ctx.strokeStyle = "rgba(236, 228, 214, 0.95)";
-        ctx.lineWidth = SPACING * 0.9;
-        ctx.stroke();
       }
 
       if (!revealed && cloth.integrity() < 0.35) {
@@ -138,14 +147,18 @@ export function TearableInvitation({ onRevealed }: Props) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 transition-opacity duration-700 ${
+      className={`fixed inset-0 z-50 select-none transition-opacity duration-700 ${
         hidden ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
+      style={{ touchAction: "none" }}
       role="presentation"
     >
-      <canvas ref={canvasRef} className="absolute inset-0" />
-      <div className="absolute inset-x-0 top-[10vh] flex justify-center pointer-events-none">
-        <p className="display text-bone/80 text-sm tracking-[0.3em] uppercase">
+      <canvas ref={canvasRef} className="absolute inset-0 cursor-crosshair" />
+      <div className="absolute inset-x-0 top-12 flex justify-center pointer-events-none">
+        <p
+          className="display text-xs md:text-sm tracking-[0.4em] uppercase"
+          style={{ color: "#5a4e3c" }}
+        >
           drag to tear
         </p>
       </div>
@@ -155,7 +168,8 @@ export function TearableInvitation({ onRevealed }: Props) {
           setHidden(true);
           onRevealed();
         }}
-        className="absolute bottom-6 right-6 text-xs uppercase tracking-widest text-bone/50 hover:text-bone/90 underline-offset-4 hover:underline"
+        className="absolute bottom-6 right-6 text-xs uppercase tracking-widest underline-offset-4 hover:underline"
+        style={{ color: "#5a4e3c" }}
       >
         Skip intro →
       </button>
