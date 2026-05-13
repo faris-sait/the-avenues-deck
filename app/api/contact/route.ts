@@ -22,14 +22,14 @@ export async function POST(req: Request) {
   }
   const { intent, category, name, company, email, message } = parsed.data;
 
-  // Placeholder recipient — overridable via env var when Faris provides a real address.
   const to = process.env.INQUIRY_RECIPIENT ?? "leasing@example.com";
   const apiKey = process.env.RESEND_API_KEY;
+  const fromAddress = process.env.RESEND_FROM_EMAIL ?? "deck@noreply.invalid";
 
   if (apiKey) {
     const resend = new Resend(apiKey);
     await resend.emails.send({
-      from: "The Avenues Deck <deck@noreply.invalid>",
+      from: `The Avenues Deck <${fromAddress}>`,
       to,
       subject: `[${intent.toUpperCase()}${category ? ` · ${category}` : ""}] Inquiry from ${name}`,
       replyTo: email,
