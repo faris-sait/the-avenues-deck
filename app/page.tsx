@@ -9,6 +9,8 @@ import { DistrictMap } from "@/components/sections/DistrictMap";
 import { PrestigeLuxury } from "@/components/sections/PrestigeLuxury";
 import { GrandAvenue } from "@/components/sections/GrandAvenue";
 import { SoKuYouth } from "@/components/sections/SoKuYouth";
+import { EventsPlatform } from "@/components/sections/EventsPlatform";
+import { Recognition } from "@/components/sections/Recognition";
 
 const SECTIONS = [
   { id: "reveal", label: "Welcome" },
@@ -52,6 +54,8 @@ export default function Page() {
           if (s.id === "prestige") return <PrestigeLuxury key={s.id} />;
           if (s.id === "grand-avenue") return <GrandAvenue key={s.id} />;
           if (s.id === "soku") return <SoKuYouth key={s.id} />;
+          if (s.id === "events") return <EventsPlatform key={s.id} />;
+          if (s.id === "recognition") return <Recognition key={s.id} />;
           return (
             <section
               key={s.id}
