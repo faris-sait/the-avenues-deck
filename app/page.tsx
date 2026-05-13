@@ -6,6 +6,9 @@ import { TopNav } from "@/components/nav/TopNav";
 import { ProgressRail } from "@/components/nav/ProgressRail";
 import { WhyTheProperty } from "@/components/sections/WhyTheProperty";
 import { DistrictMap } from "@/components/sections/DistrictMap";
+import { PrestigeLuxury } from "@/components/sections/PrestigeLuxury";
+import { GrandAvenue } from "@/components/sections/GrandAvenue";
+import { SoKuYouth } from "@/components/sections/SoKuYouth";
 
 const SECTIONS = [
   { id: "reveal", label: "Welcome" },
@@ -46,6 +49,9 @@ export default function Page() {
         {SECTIONS.slice(1).map((s) => {
           if (s.id === "property") return <WhyTheProperty key={s.id} />;
           if (s.id === "districts") return <DistrictMap key={s.id} />;
+          if (s.id === "prestige") return <PrestigeLuxury key={s.id} />;
+          if (s.id === "grand-avenue") return <GrandAvenue key={s.id} />;
+          if (s.id === "soku") return <SoKuYouth key={s.id} />;
           return (
             <section
               key={s.id}
