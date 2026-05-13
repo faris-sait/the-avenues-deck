@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
-import { TearableInvitation } from "@/components/hero/TearableInvitation";
+import dynamic from "next/dynamic";
+const TearableInvitation = dynamic(
+  () => import("@/components/hero/TearableInvitation").then((m) => m.TearableInvitation),
+  { ssr: false }
+);
 import { HeroVideo } from "@/components/hero/HeroVideo";
 import { TopNav } from "@/components/nav/TopNav";
 import { ProgressRail } from "@/components/nav/ProgressRail";

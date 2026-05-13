@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Avenues — Interactive Sales Deck
 
-## Getting Started
+A browser-based, Digideck-style interactive sales deck for **[The Avenues, Kuwait](https://www.the-avenues.com/)** — the world's #2 largest shopping mall by GLA. Built for the Liat.ai screening assignment.
 
-First, run the development server:
+**Live URL:** <vercel-preview-url — replace before submission>
+
+## What's distinct
+
+Slide 1 opens with a cream **paper invitation pinned to the viewport**. The viewer drags across it and a Verlet-cloth simulation (ported from [dissimulate/Tearable-Cloth](https://github.com/dissimulate/Tearable-Cloth)) shreds the paper, revealing the cinematic hero behind. From there the deck is pure Digideck polish: 8 video-anchored sections, an interactive 12-district map, and a working luxury sub-module at `/prestige` demonstrating the expandable architecture.
+
+A 14-second idle timer gracefully fades the overlay if a viewer doesn't drag; a "Skip intro" button is always visible; `prefers-reduced-motion` bypasses the animation entirely.
+
+## Tech stack
+
+- **Next.js 16** (App Router) · React 19 · TypeScript
+- **Tailwind CSS 4** (`@theme` tokens, no separate config file)
+- **Framer Motion** for section transitions
+- **Vitest** for unit tests (cloth physics + content shape + form validation)
+- **Resend** (Zod-validated inquiry form, server route)
+- **Vercel** for hosting
+
+## Setup
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment variables (optional)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The inquiry form on the "Take Action" section works without configuration — it just logs payloads to the console. To actually send emails via Resend:
 
-## Learn More
+| Variable | Description |
+|---|---|
+| `RESEND_API_KEY` | Resend API key |
+| `INQUIRY_RECIPIENT` | Email address that should receive form submissions (defaults to `leasing@example.com`) |
 
-To learn more about Next.js, take a look at the following resources:
+Add these in **Vercel → Project Settings → Environment Variables**, then redeploy.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Script | What it does |
+|---|---|
+| `npm run dev` | Dev server on `:3000` |
+| `npm run build` | Production build |
+| `npm run start` | Serve production build |
+| `npm test` | Vitest run |
+| `npm run lint` | Next.js lint |
 
-## Deploy on Vercel
+## Project structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/
+  api/contact/route.ts            POST /api/contact — Zod-validated, Resend-backed
+  prestige/{layout,page}.tsx      Phase-2 deep-dive sub-module
+  layout.tsx                      Fonts + theme
+  page.tsx                        Single-page deck stitching all sections
+components/
+  hero/                           Verlet cloth + tearable invitation
+  nav/                            TopNav + ProgressRail
+  sections/                       9 deck sections + SectionShell wrapper
+  ui/                             Kpi, VideoTile, PaperCard
+content/
+  districts.ts                    Source of truth for all 12 districts
+  kpis.ts                         Source of truth for KPIs (every claim cites a URL)
+lib/
+  cloth-sim/                      Headless Verlet physics (Point, Constraint, Cloth) + tests
+  motion.ts                       Framer Motion presets
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Design decisions
+
+| Decision | Why |
+|---|---|
+| Tearable paper only on slide 1 | Memorable hook, but doesn't fight content legibility on the sales sections |
+| Verlet cloth ported to TS, dynamically imported | Type safety + smaller initial bundle for future routes |
+| `prefers-reduced-motion` short-circuits the hero; 14s idle fade; skip-intro button | Accessibility — never trap a viewer |
+| Typed `content/*.ts` over a CMS | YAGNI for a deck; every numeric claim cites a source URL inline |
+| Scroll-snap + Framer Motion, not full-page transitions | Brief calls for non-linear navigation — journey is reader-led |
+| 12 districts each have a sub-module slot; only Prestige built in this submission | Demonstrates expandable architecture per the brief's Phase 2 |
+| Tailwind 4 `@theme` tokens (no `tailwind.config.ts`) | Single-source design tokens in CSS, idiomatic for Tailwind 4 |
+
+## AI tools used
+
+| Tool | What for |
+|---|---|
+| **Claude** (Anthropic) | Product reasoning, copywriting, all code in `lib/`, `components/`, sections, route handlers |
+| **agent-browser CLI** (Vercel Labs) | Headless Chrome verification during development — drag interaction + screenshot testing |
+| **Midjourney / Imagen** *(planned)* | Paper texture for the cloth veil; section divider plates; activation concept render |
+| **Topaz / Real-ESRGAN** *(planned)* | Upscaling lower-resolution press photos when sourced |
+| **Runway / Veo** *(optional)* | Cinematic B-roll where official Avenues reels don't cover a beat |
+
+See [`docs/ASSETS.md`](./docs/ASSETS.md) for the asset catalogue and licenses.
+
+## What I'd add with more time
+
+- **Source real Avenues video reels and stills** — the deck currently uses placeholder posters that render as charcoal rectangles; visual impact jumps once real reels land
+- **AVIF / WebP image pipeline** — Next/Image and `<picture>` fallbacks once posters exist
+- Build out the other 11 district sub-modules following the `/prestige` template
+- Mobile-portrait polish pass (currently desktop + tablet only)
+- Arabic localization (RTL) — Kuwait is bilingual
+- "Compare to your city" interactive surfacing the closest GCC airport to the prospect
+- Per-tenant deep-link presets so a sales rep can share `/prestige?tenant=maison-x` and the deck arrives pre-framed
+
+## Submission
+
+Email to `medi@liat.ai` with: live URL + this repo URL + optional 1-page write-up.
+
+## Credits
+
+- Tearable cloth physics adapted from [dissimulate/Tearable-Cloth](https://github.com/dissimulate/Tearable-Cloth) — Verlet integration
+- Content references: [The Avenues (Wikipedia)](https://en.wikipedia.org/wiki/The_Avenues_(Kuwait)), [The Avenues official site](https://www.the-avenues.com/kuwait/en/about), [Gensler project page](https://www.gensler.com/projects/the-avenues), [List of largest malls (Wikipedia)](https://en.wikipedia.org/wiki/List_of_largest_shopping_malls)
+- Fonts: Fraunces (display) + Inter (body) via `next/font/google`
