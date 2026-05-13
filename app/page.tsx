@@ -4,6 +4,8 @@ import { TearableInvitation } from "@/components/hero/TearableInvitation";
 import { HeroVideo } from "@/components/hero/HeroVideo";
 import { TopNav } from "@/components/nav/TopNav";
 import { ProgressRail } from "@/components/nav/ProgressRail";
+import { WhyTheProperty } from "@/components/sections/WhyTheProperty";
+import { DistrictMap } from "@/components/sections/DistrictMap";
 
 const SECTIONS = [
   { id: "reveal", label: "Welcome" },
@@ -41,15 +43,19 @@ export default function Page() {
           </h1>
         </section>
 
-        {SECTIONS.slice(1).map((s) => (
-          <section
-            key={s.id}
-            id={s.id}
-            className="min-h-screen flex items-center justify-center border-b border-white/5"
-          >
-            <h2 className="display text-4xl text-bone/80">{s.label}</h2>
-          </section>
-        ))}
+        {SECTIONS.slice(1).map((s) => {
+          if (s.id === "property") return <WhyTheProperty key={s.id} />;
+          if (s.id === "districts") return <DistrictMap key={s.id} />;
+          return (
+            <section
+              key={s.id}
+              id={s.id}
+              className="min-h-screen flex items-center justify-center border-b border-white/5"
+            >
+              <h2 className="display text-4xl text-bone/80">{s.label}</h2>
+            </section>
+          );
+        })}
       </main>
     </>
   );
