@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { TearableInvitation } from "@/components/hero/TearableInvitation";
 import { HeroVideo } from "@/components/hero/HeroVideo";
+import { TopNav } from "@/components/nav/TopNav";
+import { ProgressRail } from "@/components/nav/ProgressRail";
 
 const SECTIONS = [
   { id: "reveal", label: "Welcome" },
@@ -21,6 +23,8 @@ export default function Page() {
   return (
     <>
       {!revealed && <TearableInvitation onRevealed={() => setRevealed(true)} />}
+      <TopNav visible={revealed} />
+      <ProgressRail visible={revealed} />
       <main>
         <section
           id="reveal"
