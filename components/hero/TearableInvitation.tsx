@@ -8,7 +8,7 @@ const ITERATIONS = 4;
 const SPACING = 20;            // was 14
 const TEAR_DISTANCE = 90;      // was 64 — scaled with SPACING
 const TEAR_RADIUS = 34;        // was 24 — scaled with SPACING
-const IDLE_AUTO_REVEAL_MS = 4000;
+const IDLE_AUTO_REVEAL_MS = 14000;
 const PAPER_COLOR = "#ece4d6";
 
 interface Props {
@@ -115,15 +115,15 @@ export function TearableInvitation({ onRevealed }: Props) {
       ctx.lineWidth = SPACING * 1.6;
       ctx.stroke();
 
+      // After a long idle period, gracefully fade the whole overlay rather than
+      // instantly clearing constraints — gives the viewer a visible transition.
       if (
         !revealed &&
         performance.now() - lastInteraction > IDLE_AUTO_REVEAL_MS
       ) {
-        cloth.tearAt(
-          originX + (cols * SPACING) / 2,
-          originY + (rows * SPACING) / 2,
-          w
-        );
+        revealed = true;
+        setHidden(true);
+        onRevealed();
       }
 
       if (!revealed && cloth.integrity() < 0.35) {
