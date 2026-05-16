@@ -24,7 +24,7 @@ export function TearableInvitation({ onRevealed }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textureRef = useRef<HTMLImageElement | null>(null);
   const [hidden, setHidden] = useState(false);
-  const [chromeHidden, setChromeHidden] = useState(false);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -67,17 +67,13 @@ export function TearableInvitation({ onRevealed }: Props) {
     let mouseX = -9999;
     let mouseY = -9999;
     let mouseDown = false;
-    let chromeDismissed = false;
     let lastInteraction = performance.now();
 
     const onPointerDown = (e: PointerEvent) => {
       mouseDown = true;
       mouseX = e.clientX;
       mouseY = e.clientY;
-      if (!chromeDismissed) {
-        chromeDismissed = true;
-        setChromeHidden(true);
-      }
+      setDragging(true);
       lastInteraction = performance.now();
     };
     const onPointerMove = (e: PointerEvent) => {
@@ -90,12 +86,16 @@ export function TearableInvitation({ onRevealed }: Props) {
     };
     const onPointerUp = () => {
       mouseDown = false;
+      setDragging(false);
     };
 
     canvas.addEventListener("pointerdown", onPointerDown);
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerUp);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+    window.addEventListener("blur", onPointerUp);
 
     let rafId = 0;
     let revealed = false;
@@ -126,12 +126,14 @@ export function TearableInvitation({ onRevealed }: Props) {
         performance.now() - lastInteraction > IDLE_AUTO_REVEAL_MS
       ) {
         revealed = true;
+        setDragging(false);
         setHidden(true);
         onRevealed();
       }
 
       if (!revealed && cloth.integrity() < 0.35) {
         revealed = true;
+        setDragging(false);
         setHidden(true);
         onRevealed();
       }
@@ -146,6 +148,9 @@ export function TearableInvitation({ onRevealed }: Props) {
       canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerup", onPointerUp);
       canvas.removeEventListener("pointercancel", onPointerUp);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+      window.removeEventListener("blur", onPointerUp);
     };
   }, [onRevealed]);
 
@@ -157,11 +162,12 @@ export function TearableInvitation({ onRevealed }: Props) {
       style={{ touchAction: "none" }}
       role="presentation"
     >
-      <canvas ref={canvasRef} className="absolute inset-0 cursor-crosshair" />
+      <canvas
+        ref={canvasRef}
+        className={`absolute inset-0 ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+      />
       <div
-        className={`pointer-events-none absolute inset-0 px-6 py-6 transition-opacity duration-300 md:px-10 md:py-10 ${
-          chromeHidden || hidden ? "opacity-0" : "opacity-100"
-        }`}
+        className="pointer-events-none absolute inset-0 px-6 py-6 md:px-10 md:py-10"
       >
         <span className="absolute left-4 top-4 block h-4 w-4 border-l border-t border-black/20 md:left-8 md:top-8" />
         <span className="absolute right-4 top-4 block h-4 w-4 border-r border-t border-black/20 md:right-8 md:top-8" />
@@ -197,9 +203,13 @@ export function TearableInvitation({ onRevealed }: Props) {
           </div>
 
           <div className="flex flex-1 items-center justify-center py-16 md:py-20">
-            <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+            <div
+              className={`mx-auto flex w-full max-w-5xl flex-col items-center text-center transition-opacity duration-200 ${
+                dragging ? "opacity-0" : "opacity-100"
+              }`}
+            >
               <div className="rule-ornament mx-auto max-w-xl" style={{ color: PAPER_GOLD }}>
-              Invitation
+                Invitation
               </div>
               <h2
                 className="display mt-8 max-w-5xl text-[clamp(3rem,8vw,8rem)] leading-[0.9]"
@@ -218,7 +228,7 @@ export function TearableInvitation({ onRevealed }: Props) {
                 the paper to tear the invitation open and enter the deck.
               </p>
               <div
-                className="mt-8 inline-flex items-center gap-4 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.36em] md:px-6"
+                className="mt-8 inline-flex items-center gap-4 border px-6 py-4 mono text-[0.72rem] uppercase tracking-[0.38em] md:px-8 md:py-4 md:text-[0.8rem]"
                 style={{
                   borderColor: "rgba(24, 21, 18, 0.16)",
                   color: PAPER_INK,
@@ -250,7 +260,9 @@ export function TearableInvitation({ onRevealed }: Props) {
 
           <div className="flex items-end justify-between gap-6">
             <div
-              className="inline-flex items-center gap-4 mono text-[0.62rem] uppercase tracking-[0.38em]"
+              className={`inline-flex items-center gap-4 mono text-[0.68rem] uppercase tracking-[0.38em] transition-opacity duration-200 ${
+                dragging ? "opacity-0" : "opacity-100"
+              }`}
               style={{ color: "rgba(24, 21, 18, 0.58)" }}
             >
               <span className="block h-px w-10" style={{ backgroundColor: "rgba(24, 21, 18, 0.18)" }} />
@@ -268,12 +280,11 @@ export function TearableInvitation({ onRevealed }: Props) {
       <button
         type="button"
         onClick={() => {
+          setDragging(false);
           setHidden(true);
           onRevealed();
         }}
-        className={`absolute bottom-6 right-6 pointer-events-auto inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors duration-300 hover:bg-black/5 md:bottom-10 md:right-10 ${
-          chromeHidden || hidden ? "pointer-events-none opacity-0" : "opacity-100"
-        }`}
+        className="absolute bottom-6 right-6 pointer-events-auto inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors duration-300 hover:bg-black/5 md:bottom-10 md:right-10"
         style={{
           borderColor: "rgba(24, 21, 18, 0.16)",
           color: PAPER_INK,
