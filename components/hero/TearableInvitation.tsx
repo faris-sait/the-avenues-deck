@@ -28,13 +28,6 @@ export function TearableInvitation({ onRevealed }: Props) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Reduced-motion viewers skip the cloth animation; render the invitation
-    // shell in the initial HTML, then immediately reveal the deck after mount.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      onRevealed();
-      return;
-    }
-
     const ctx = canvas.getContext("2d")!;
     // Render at 1x — a transient overlay gains nothing from DPR-scaled
     // pixels, and the per-frame full-viewport redraw is the bottleneck.
@@ -150,8 +143,8 @@ export function TearableInvitation({ onRevealed }: Props) {
   }, [onRevealed]);
 
   return (
-      <div
-      className={`fixed inset-0 z-50 select-none transition-opacity duration-700 motion-reduce:pointer-events-none motion-reduce:opacity-0 ${
+    <div
+      className={`fixed inset-0 z-50 select-none transition-opacity duration-700 ${
         hidden ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
       style={{ touchAction: "none" }}
