@@ -4,10 +4,13 @@ import { Cloth } from "@/lib/cloth-sim/cloth-sim";
 
 const GRAVITY = 0.42;
 const FRICTION = 0.99;
-const ITERATIONS = 4;
-const SPACING = 20;            // was 14
-const TEAR_DISTANCE = 90;      // was 64 — scaled with SPACING
-const TEAR_RADIUS = 34;        // was 24 — scaled with SPACING
+// A coarse grid and few relaxation passes keep the per-frame cost low: this
+// overlay covers the whole viewport, so the cloth simulation and the
+// full-viewport canvas redraw both scale with the point count.
+const ITERATIONS = 2;
+const SPACING = 44;
+const TEAR_DISTANCE = 200; // ~4.5x SPACING
+const TEAR_RADIUS = 75; // drag-tear radius, larger than SPACING
 const IDLE_AUTO_REVEAL_MS = 14000;
 const PAPER_COLOR = "#c9ccd1";
 const PAPER_INK = "#2a2d31";
@@ -19,23 +22,29 @@ interface Props {
 export function TearableInvitation({ onRevealed }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textureRef = useRef<HTMLImageElement | null>(null);
-  const [hidden, setHidden] = useState(false);
+  // Reduced-motion viewers skip the cloth animation, so the overlay starts
+  // hidden for them — the effect below only notifies the parent to reveal.
+  const [hidden, setHidden] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setHidden(true);
+    // hidden was already initialized true for reduced-motion viewers above;
+    // here we only notify the parent so it reveals the deck and unmounts this.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       onRevealed();
       return;
     }
 
     const ctx = canvas.getContext("2d")!;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Render at 1x — a transient overlay gains nothing from DPR-scaled
+    // pixels, and the per-frame full-viewport redraw is the bottleneck.
+    const dpr = 1;
     const w = window.innerWidth;
     const h = window.innerHeight;
     canvas.width = w * dpr;
@@ -61,7 +70,7 @@ export function TearableInvitation({ onRevealed }: Props) {
     });
 
     const img = new Image();
-    img.src = "/img/paper-texture.jpg";
+    img.src = "/img/paper-texture.svg";
     img.onload = () => {
       textureRef.current = img;
     };

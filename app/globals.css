@@ -1,19 +1,122 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #0a0a0a;
-  --color-bone: #f4ede4;
-  --color-cream: #ece4d6;
+  /* Core ink + paper */
+  --color-ink: #08080c;
+  --color-vault: #101018;
+  --color-charcoal: #1a1a22;
+  --color-bone: #f5ecd9;
+  --color-cream: #ece1c9;
+  --color-sand: #c8b894;
+
+  /* Accents */
   --color-gold: #c9a96e;
-  --color-charcoal: #1a1a1a;
+  --color-gold-deep: #8c7340;
+  --color-oxblood: #4a1c1c;
+  --color-azurite: #1c2845;
+
+  /* Fonts */
   --font-display: var(--font-display);
   --font-body: var(--font-body);
+  --font-italic: var(--font-italic);
+  --font-mono: var(--font-mono);
 }
 
 html, body { height: 100%; }
-body { font-family: var(--font-body); }
-.display { font-family: var(--font-display); font-feature-settings: "ss01", "ss02"; }
+body {
+  font-family: var(--font-body);
+  background: var(--color-ink);
+  color: var(--color-bone);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.display {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01", "ss02", "ss03";
+  font-variation-settings: "opsz" 144, "SOFT" 25, "WONK" 0;
+  letter-spacing: -0.02em;
+}
+.italic-display {
+  font-family: var(--font-italic);
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+.mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
+.tabular { font-feature-settings: "tnum"; }
 
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
+
+/* Selection */
+::selection { background: var(--color-gold); color: var(--color-ink); }
+
+/* A hairline divider with a centered ornament */
+.rule-ornament {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  color: var(--color-gold);
+}
+.rule-ornament::before,
+.rule-ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor 30%, currentColor 70%, transparent);
+  opacity: 0.4;
+}
+
+/* Subtle animated underline for inline links */
+.link-gold {
+  position: relative;
+  color: var(--color-gold);
+}
+.link-gold::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-gold:hover::after { transform: scaleX(0.6); }
+
+/* Eyebrow caps */
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--color-gold);
+}
+
+/* The big numeric KPI uses Fraunces with tabular figures */
+.figure {
+  font-family: var(--font-display);
+  font-feature-settings: "tnum", "lnum", "ss01";
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+}
+
+/* Decorative ornament — a small lozenge between sections */
+.lozenge {
+  width: 6px; height: 6px;
+  background: var(--color-gold);
+  transform: rotate(45deg);
+  display: inline-block;
+}
+
+/* Custom focus ring */
+:focus-visible {
+  outline: 1px solid var(--color-gold);
+  outline-offset: 4px;
+}
+
+/* Soft scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,169,110,0.55); }

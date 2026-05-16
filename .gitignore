@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# local QA / dogfooding artifacts (screenshots, recordings — kept local)
+/dogfood-output
+
 # next.js
 /.next/
 /out/

@@ -1,29 +1,67 @@
 import { SectionShell } from "./SectionShell";
-import { VideoTile } from "@/components/ui/VideoTile";
+import { PosterTile } from "@/components/atmosphere/PosterTile";
 
 export function GrandAvenue() {
   return (
     <SectionShell
       id="grand-avenue"
-      eyebrow="Grand Avenue"
-      title="A European boulevard, climate-controlled."
+      eyebrow="Grand Avenue · F&B district"
+      index="v / ix"
       tone="cream"
+      title={
+        <>
+          A European boulevard,
+          <br />
+          <span className="italic-display">climate-controlled.</span>
+        </>
+      }
+      subtitle={
+        <>
+          A 70-meter ETFE Circus dome opens over a stone-paved, tree-lined
+          boulevard — a permanent European afternoon regardless of Kuwait&apos;s
+          summer.
+        </>
+      }
     >
-      <div className="grid md:grid-cols-[2fr_1fr] gap-10 items-center mb-12">
-        <VideoTile poster="/img/grand-1-poster.jpg" srcMp4="/video/grand-1.mp4" caption="The Circus under ETFE" aspect="video" />
-        <div className="space-y-5">
-          <p className="text-ink/85 text-lg">
-            A 70-meter ETFE dome opens over a stone-paved, tree-lined boulevard. Diners eat under daylight that never fades.
-          </p>
-          <p className="text-ink/70">
-            Designed by Gensler, Grand Avenue redefines what an indoor F&B district can be — a permanent European afternoon, regardless of Kuwait's summer.
-          </p>
+      <div className="grid lg:grid-cols-[1.55fr_1fr] gap-8 flex-1 min-h-0 items-stretch">
+        <div className="min-h-0">
+          <PosterTile variant="grand-circus" caption="The Circus · 70m ETFE dome" aspect="fill" />
         </div>
-      </div>
-      <div className="grid md:grid-cols-3 gap-6">
-        <VideoTile poster="/img/grand-2-poster.jpg" srcMp4="/video/grand-2.mp4" caption="Boulevard" aspect="portrait" />
-        <VideoTile poster="/img/grand-3-poster.jpg" srcMp4="/video/grand-3.mp4" caption="Dining" aspect="portrait" />
-        <VideoTile poster="/img/grand-4-poster.jpg" srcMp4="/video/grand-4.mp4" caption="ETFE detail" aspect="portrait" />
+        <div className="flex flex-col justify-between gap-6 min-h-0">
+          <div>
+            <p className="figure text-[clamp(3.5rem,7vw,6rem)] text-ink leading-none">
+              70<span className="text-gold">m</span>
+            </p>
+            <p className="mono text-[0.6rem] uppercase tracking-[0.3em] text-ink/55 mt-3">
+              Free-span ETFE dome diameter
+            </p>
+            <p className="text-ink/75 leading-relaxed text-sm md:text-base mt-5">
+              Designed by Gensler, the largest ETFE structure in the region.
+              Light transmissive in winter, climate-buffered in summer.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 border-t border-ink/15 pt-5">
+            <div>
+              <p className="eyebrow text-ink/70 mb-2">F&B</p>
+              <p className="text-ink/75 text-xs leading-relaxed">
+                Highest dinner-hour footfall on property.
+              </p>
+            </div>
+            <div>
+              <p className="eyebrow text-ink/70 mb-2">Activation</p>
+              <p className="text-ink/75 text-xs leading-relaxed">
+                Patio takeovers under live daylight.
+              </p>
+            </div>
+            <div>
+              <p className="eyebrow text-ink/70 mb-2">Broadcast</p>
+              <p className="text-ink/75 text-xs leading-relaxed">
+                Camera-ready architecture, used for fashion broadcasts.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </SectionShell>
   );

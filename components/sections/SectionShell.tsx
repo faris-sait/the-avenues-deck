@@ -5,38 +5,81 @@ import { fadeUp, stagger } from "@/lib/motion";
 interface Props {
   id: string;
   eyebrow?: string;
-  title: string;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
   children: React.ReactNode;
-  tone?: "dark" | "cream";
+  tone?: "dark" | "cream" | "vault" | "oxblood";
+  index?: string;
 }
 
-export function SectionShell({ id, eyebrow, title, children, tone = "dark" }: Props) {
-  const bg = tone === "cream" ? "bg-cream text-ink" : "bg-ink text-bone";
+const toneStyles: Record<NonNullable<Props["tone"]>, string> = {
+  dark: "bg-ink text-bone",
+  vault: "bg-vault text-bone",
+  cream: "bg-cream text-ink",
+  oxblood: "bg-[#1a0d0d] text-bone",
+};
+
+/**
+ * Every section is exactly one viewport tall — viewers should never need to
+ * scroll inside a section. Use a flex column with the header at the top and
+ * the children expanding to fill remaining height; constrain interior content
+ * so it stays within the viewport on standard desktop heights (~800–1000px).
+ */
+export function SectionShell({
+  id,
+  eyebrow,
+  title,
+  subtitle,
+  children,
+  tone = "dark",
+  index,
+}: Props) {
   return (
     <motion.section
       id={id}
-      className={`${bg} relative min-h-screen px-6 md:px-16 py-24 scroll-mt-20`}
+      className={`${toneStyles[tone]} relative h-screen min-h-[640px] flex flex-col px-6 md:px-16 py-14 md:py-16 scroll-mt-20 overflow-hidden`}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={stagger}
     >
-      <div className="max-w-7xl mx-auto">
-        {eyebrow && (
-          <motion.p
+      {index && (
+        <div className="absolute top-8 right-6 md:right-16 mono text-[0.55rem] uppercase tracking-[0.4em] opacity-30">
+          {index}
+        </div>
+      )}
+
+      <div className="relative max-w-7xl mx-auto w-full flex flex-col flex-1">
+        <header className="mb-8 md:mb-10 max-w-5xl">
+          {eyebrow && (
+            <motion.p
+              variants={fadeUp}
+              className="eyebrow mb-4 flex items-center gap-3"
+            >
+              <span className="lozenge" />
+              {eyebrow}
+            </motion.p>
+          )}
+          <motion.h2
             variants={fadeUp}
-            className="uppercase tracking-[0.3em] text-xs opacity-60 mb-6"
+            className="display text-[clamp(2rem,5vw,4.75rem)] leading-[0.95]"
           >
-            {eyebrow}
-          </motion.p>
-        )}
-        <motion.h2
-          variants={fadeUp}
-          className="display text-5xl md:text-7xl leading-[0.95] mb-12 max-w-4xl"
-        >
-          {title}
-        </motion.h2>
-        <motion.div variants={fadeUp}>{children}</motion.div>
+            {title}
+          </motion.h2>
+          {subtitle && (
+            <motion.div
+              variants={fadeUp}
+              className={`mt-5 max-w-2xl text-base md:text-lg leading-relaxed ${
+                tone === "cream" ? "text-ink/80" : "text-bone/75"
+              }`}
+            >
+              {subtitle}
+            </motion.div>
+          )}
+        </header>
+        <motion.div variants={fadeUp} className="flex-1 flex flex-col min-h-0">
+          {children}
+        </motion.div>
       </div>
     </motion.section>
   );
