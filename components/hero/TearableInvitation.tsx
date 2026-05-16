@@ -24,6 +24,7 @@ export function TearableInvitation({ onRevealed }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textureRef = useRef<HTMLImageElement | null>(null);
   const [hidden, setHidden] = useState(false);
+  const [chromeHidden, setChromeHidden] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -66,12 +67,17 @@ export function TearableInvitation({ onRevealed }: Props) {
     let mouseX = -9999;
     let mouseY = -9999;
     let mouseDown = false;
+    let chromeDismissed = false;
     let lastInteraction = performance.now();
 
     const onPointerDown = (e: PointerEvent) => {
       mouseDown = true;
       mouseX = e.clientX;
       mouseY = e.clientY;
+      if (!chromeDismissed) {
+        chromeDismissed = true;
+        setChromeHidden(true);
+      }
       lastInteraction = performance.now();
     };
     const onPointerMove = (e: PointerEvent) => {
@@ -152,14 +158,18 @@ export function TearableInvitation({ onRevealed }: Props) {
       role="presentation"
     >
       <canvas ref={canvasRef} className="absolute inset-0 cursor-crosshair" />
-      <div className="pointer-events-none absolute inset-0 px-6 py-6 md:px-10 md:py-10">
+      <div
+        className={`pointer-events-none absolute inset-0 px-6 py-6 transition-opacity duration-300 md:px-10 md:py-10 ${
+          chromeHidden || hidden ? "opacity-0" : "opacity-100"
+        }`}
+      >
         <span className="absolute left-4 top-4 block h-4 w-4 border-l border-t border-black/20 md:left-8 md:top-8" />
         <span className="absolute right-4 top-4 block h-4 w-4 border-r border-t border-black/20 md:right-8 md:top-8" />
         <span className="absolute bottom-4 left-4 block h-4 w-4 border-b border-l border-black/20 md:bottom-8 md:left-8" />
         <span className="absolute bottom-4 right-4 block h-4 w-4 border-b border-r border-black/20 md:bottom-8 md:right-8" />
         <span className="absolute inset-3 border border-black/8 md:inset-6" />
 
-        <div className="relative flex h-full flex-col justify-between">
+        <div className="relative flex h-full flex-col">
           <div className="flex items-start justify-between gap-6">
             <div className="max-w-sm">
               <p
@@ -186,42 +196,55 @@ export function TearableInvitation({ onRevealed }: Props) {
             </div>
           </div>
 
-          <div className="max-w-5xl pb-24 md:pb-28">
-            <div className="rule-ornament max-w-lg" style={{ color: PAPER_GOLD }}>
+          <div className="flex flex-1 items-center justify-center py-16 md:py-20">
+            <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+              <div className="rule-ornament mx-auto max-w-xl" style={{ color: PAPER_GOLD }}>
               Invitation
-            </div>
-            <h2
-              className="display mt-8 text-[clamp(3rem,8vw,8rem)] leading-[0.9]"
-              style={{ color: PAPER_INK }}
-            >
-              A private look
-              <span className="block" style={{ color: PAPER_GOLD }}>
-                inside The Avenues.
-              </span>
-            </h2>
-            <p
-              className="mt-8 max-w-2xl text-base leading-relaxed md:text-lg"
-              style={{ color: "rgba(24, 21, 18, 0.68)" }}
-            >
-              Twelve districts. One destination. Drag anywhere across the paper
-              to tear into the deck and reveal the story beneath.
-            </p>
-            <div
-              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 mono text-[0.62rem] uppercase tracking-[0.35em]"
-              style={{ color: "rgba(24, 21, 18, 0.52)" }}
-            >
-              <span className="inline-flex items-center gap-3">
+              </div>
+              <h2
+                className="display mt-8 max-w-5xl text-[clamp(3rem,8vw,8rem)] leading-[0.9]"
+                style={{ color: PAPER_INK }}
+              >
+                A private look
+                <span className="block" style={{ color: PAPER_GOLD }}>
+                  inside The Avenues.
+                </span>
+              </h2>
+              <p
+                className="mt-8 max-w-3xl text-base leading-relaxed md:text-xl"
+                style={{ color: "rgba(24, 21, 18, 0.68)" }}
+              >
+                Twelve districts. One destination. Press and drag anywhere across
+                the paper to tear the invitation open and enter the deck.
+              </p>
+              <div
+                className="mt-8 inline-flex items-center gap-4 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.36em] md:px-6"
+                style={{
+                  borderColor: "rgba(24, 21, 18, 0.16)",
+                  color: PAPER_INK,
+                  backgroundColor: "rgba(255, 255, 255, 0.16)",
+                }}
+              >
                 <span className="lozenge" />
-                13M square feet
-              </span>
-              <span className="inline-flex items-center gap-3">
-                <span className="lozenge" />
-                12 districts
-              </span>
-              <span className="inline-flex items-center gap-3">
-                <span className="lozenge" />
-                30M annual visits
-              </span>
+                <span>Press + drag to tear open</span>
+              </div>
+              <div
+                className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mono text-[0.62rem] uppercase tracking-[0.35em]"
+                style={{ color: "rgba(24, 21, 18, 0.52)" }}
+              >
+                <span className="inline-flex items-center gap-3">
+                  <span className="lozenge" />
+                  13M square feet
+                </span>
+                <span className="inline-flex items-center gap-3">
+                  <span className="lozenge" />
+                  12 districts
+                </span>
+                <span className="inline-flex items-center gap-3">
+                  <span className="lozenge" />
+                  30M annual visits
+                </span>
+              </div>
             </div>
           </div>
 
@@ -231,7 +254,7 @@ export function TearableInvitation({ onRevealed }: Props) {
               style={{ color: "rgba(24, 21, 18, 0.58)" }}
             >
               <span className="block h-px w-10" style={{ backgroundColor: "rgba(24, 21, 18, 0.18)" }} />
-              <span>Drag to tear</span>
+              <span>Drag anywhere to tear</span>
             </div>
             <p
               className="hidden text-right text-sm leading-relaxed md:block"
@@ -248,7 +271,9 @@ export function TearableInvitation({ onRevealed }: Props) {
           setHidden(true);
           onRevealed();
         }}
-        className="absolute bottom-6 right-6 pointer-events-auto inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors hover:bg-black/5 md:bottom-10 md:right-10"
+        className={`absolute bottom-6 right-6 pointer-events-auto inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors duration-300 hover:bg-black/5 md:bottom-10 md:right-10 ${
+          chromeHidden || hidden ? "pointer-events-none opacity-0" : "opacity-100"
+        }`}
         style={{
           borderColor: "rgba(24, 21, 18, 0.16)",
           color: PAPER_INK,
