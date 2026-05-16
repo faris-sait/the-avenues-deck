@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { attemptVideoAutoplay } from "@/lib/video";
 
 interface Props {
   poster: string;
@@ -15,15 +16,28 @@ export function VideoTile({ poster, srcMp4, srcWebm, caption, aspect = "video" }
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
+
+    const tryPlay = () => attemptVideoAutoplay(v);
     const obs = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
+        if (e.isIntersecting) tryPlay();
         else v.pause();
       },
       { threshold: 0.35 }
     );
+
+    tryPlay();
+    v.addEventListener("loadedmetadata", tryPlay);
+    v.addEventListener("canplay", tryPlay);
+    document.addEventListener("visibilitychange", tryPlay);
     obs.observe(v);
-    return () => obs.disconnect();
+
+    return () => {
+      obs.disconnect();
+      v.removeEventListener("loadedmetadata", tryPlay);
+      v.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("visibilitychange", tryPlay);
+    };
   }, []);
 
   const aspectClass =
@@ -40,6 +54,7 @@ export function VideoTile({ poster, srcMp4, srcWebm, caption, aspect = "video" }
           ref={ref}
           className="h-full w-full object-cover"
           poster={poster}
+          autoPlay
           muted
           loop
           playsInline

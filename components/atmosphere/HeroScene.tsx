@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useSyncExternalStore } from "react";
+import { attemptVideoAutoplay } from "@/lib/video";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -29,10 +30,21 @@ export function HeroScene() {
   // explicit nudge — force muted on the element and call play() once mounted.
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
-    video.muted = true;
-    video.play().catch(() => {});
-  }, []);
+    if (!video || reduceMotion) return;
+
+    const retryAutoplay = () => attemptVideoAutoplay(video);
+
+    retryAutoplay();
+    video.addEventListener("loadedmetadata", retryAutoplay);
+    video.addEventListener("canplay", retryAutoplay);
+    document.addEventListener("visibilitychange", retryAutoplay);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", retryAutoplay);
+      video.removeEventListener("canplay", retryAutoplay);
+      document.removeEventListener("visibilitychange", retryAutoplay);
+    };
+  }, [reduceMotion]);
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink" aria-hidden>
@@ -53,6 +65,7 @@ export function HeroScene() {
           loop
           playsInline
           preload="auto"
+          aria-hidden="true"
         >
           <source src="/video/hero.mp4" type="video/mp4" />
         </video>
