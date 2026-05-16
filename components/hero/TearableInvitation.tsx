@@ -12,8 +12,9 @@ const SPACING = 44;
 const TEAR_DISTANCE = 200; // ~4.5x SPACING
 const TEAR_RADIUS = 75; // drag-tear radius, larger than SPACING
 const IDLE_AUTO_REVEAL_MS = 14000;
-const PAPER_COLOR = "#c9ccd1";
-const PAPER_INK = "#2a2d31";
+const PAPER_COLOR = "#ece1c9";
+const PAPER_INK = "#181512";
+const PAPER_GOLD = "#8c7340";
 
 interface Props {
   onRevealed: () => void;
@@ -151,13 +152,95 @@ export function TearableInvitation({ onRevealed }: Props) {
       role="presentation"
     >
       <canvas ref={canvasRef} className="absolute inset-0 cursor-crosshair" />
-      <div className="absolute inset-x-0 top-12 flex justify-center pointer-events-none">
-        <p
-          className="display text-xs md:text-sm tracking-[0.4em] uppercase"
-          style={{ color: PAPER_INK }}
-        >
-          drag to tear
-        </p>
+      <div className="pointer-events-none absolute inset-0 px-6 py-6 md:px-10 md:py-10">
+        <span className="absolute left-4 top-4 block h-4 w-4 border-l border-t border-black/20 md:left-8 md:top-8" />
+        <span className="absolute right-4 top-4 block h-4 w-4 border-r border-t border-black/20 md:right-8 md:top-8" />
+        <span className="absolute bottom-4 left-4 block h-4 w-4 border-b border-l border-black/20 md:bottom-8 md:left-8" />
+        <span className="absolute bottom-4 right-4 block h-4 w-4 border-b border-r border-black/20 md:bottom-8 md:right-8" />
+        <span className="absolute inset-3 border border-black/8 md:inset-6" />
+
+        <div className="relative flex h-full flex-col justify-between">
+          <div className="flex items-start justify-between gap-6">
+            <div className="max-w-sm">
+              <p
+                className="mono text-[0.62rem] uppercase tracking-[0.38em]"
+                style={{ color: PAPER_GOLD }}
+              >
+                The Avenues · Kuwait
+              </p>
+              <p
+                className="mt-4 text-sm leading-relaxed md:text-[0.95rem]"
+                style={{ color: "rgba(24, 21, 18, 0.62)" }}
+              >
+                A tactile invitation into the property story behind Kuwait&apos;s
+                most ambitious retail address.
+              </p>
+            </div>
+
+            <div
+              className="hidden items-center gap-4 mono text-[0.58rem] uppercase tracking-[0.35em] md:flex"
+              style={{ color: "rgba(24, 21, 18, 0.5)" }}
+            >
+              <span className="block h-px w-12" style={{ backgroundColor: "rgba(24, 21, 18, 0.18)" }} />
+              <span>Slide 00 / 09</span>
+            </div>
+          </div>
+
+          <div className="max-w-5xl pb-24 md:pb-28">
+            <div className="rule-ornament max-w-lg" style={{ color: PAPER_GOLD }}>
+              Invitation
+            </div>
+            <h2
+              className="display mt-8 text-[clamp(3rem,8vw,8rem)] leading-[0.9]"
+              style={{ color: PAPER_INK }}
+            >
+              A private look
+              <span className="block" style={{ color: PAPER_GOLD }}>
+                inside The Avenues.
+              </span>
+            </h2>
+            <p
+              className="mt-8 max-w-2xl text-base leading-relaxed md:text-lg"
+              style={{ color: "rgba(24, 21, 18, 0.68)" }}
+            >
+              Twelve districts. One destination. Drag anywhere across the paper
+              to tear into the deck and reveal the story beneath.
+            </p>
+            <div
+              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 mono text-[0.62rem] uppercase tracking-[0.35em]"
+              style={{ color: "rgba(24, 21, 18, 0.52)" }}
+            >
+              <span className="inline-flex items-center gap-3">
+                <span className="lozenge" />
+                13M square feet
+              </span>
+              <span className="inline-flex items-center gap-3">
+                <span className="lozenge" />
+                12 districts
+              </span>
+              <span className="inline-flex items-center gap-3">
+                <span className="lozenge" />
+                30M annual visits
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-end justify-between gap-6">
+            <div
+              className="inline-flex items-center gap-4 mono text-[0.62rem] uppercase tracking-[0.38em]"
+              style={{ color: "rgba(24, 21, 18, 0.58)" }}
+            >
+              <span className="block h-px w-10" style={{ backgroundColor: "rgba(24, 21, 18, 0.18)" }} />
+              <span>Drag to tear</span>
+            </div>
+            <p
+              className="hidden text-right text-sm leading-relaxed md:block"
+              style={{ color: "rgba(24, 21, 18, 0.48)" }}
+            >
+              Best experienced with sound on after the reveal.
+            </p>
+          </div>
+        </div>
       </div>
       <button
         type="button"
@@ -165,9 +248,14 @@ export function TearableInvitation({ onRevealed }: Props) {
           setHidden(true);
           onRevealed();
         }}
-        className="absolute bottom-6 right-6 text-xs uppercase tracking-widest underline-offset-4 hover:underline"
-        style={{ color: PAPER_INK }}
+        className="absolute bottom-6 right-6 pointer-events-auto inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors hover:bg-black/5 md:bottom-10 md:right-10"
+        style={{
+          borderColor: "rgba(24, 21, 18, 0.16)",
+          color: PAPER_INK,
+          backgroundColor: "rgba(255, 255, 255, 0.18)",
+        }}
       >
+        <span className="lozenge" />
         Skip intro →
       </button>
     </div>
