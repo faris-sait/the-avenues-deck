@@ -22,20 +22,14 @@ interface Props {
 export function TearableInvitation({ onRevealed }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textureRef = useRef<HTMLImageElement | null>(null);
-  // Reduced-motion viewers skip the cloth animation, so the overlay starts
-  // hidden for them — the effect below only notifies the parent to reveal.
-  const [hidden, setHidden] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // hidden was already initialized true for reduced-motion viewers above;
-    // here we only notify the parent so it reveals the deck and unmounts this.
+    // Reduced-motion viewers skip the cloth animation; render the invitation
+    // shell in the initial HTML, then immediately reveal the deck after mount.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       onRevealed();
       return;
@@ -156,8 +150,8 @@ export function TearableInvitation({ onRevealed }: Props) {
   }, [onRevealed]);
 
   return (
-    <div
-      className={`fixed inset-0 z-50 select-none transition-opacity duration-700 ${
+      <div
+      className={`fixed inset-0 z-50 select-none transition-opacity duration-700 motion-reduce:pointer-events-none motion-reduce:opacity-0 ${
         hidden ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
       style={{ touchAction: "none" }}

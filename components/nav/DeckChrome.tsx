@@ -1,18 +1,8 @@
 "use client";
 import { useCallback, useState } from "react";
-import dynamic from "next/dynamic";
 import { TopNav } from "@/components/nav/TopNav";
 import { ProgressRail } from "@/components/nav/ProgressRail";
-
-// The invitation runs a Verlet cloth simulation on a <canvas> and touches
-// `window`/`requestAnimationFrame`, so it is client-only — never server-rendered.
-const TearableInvitation = dynamic(
-  () =>
-    import("@/components/hero/TearableInvitation").then(
-      (m) => m.TearableInvitation,
-    ),
-  { ssr: false },
-);
+import { TearableInvitation } from "@/components/hero/TearableInvitation";
 
 /**
  * Persistent deck chrome: the tearable-paper invitation that gates the deck on
