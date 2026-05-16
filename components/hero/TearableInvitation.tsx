@@ -167,7 +167,9 @@ export function TearableInvitation({ onRevealed }: Props) {
         className={`absolute inset-0 ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
       />
       <div
-        className="pointer-events-none absolute inset-0 px-6 py-6 md:px-10 md:py-10"
+        className={`pointer-events-none absolute inset-0 px-6 py-6 transition-opacity duration-200 md:px-10 md:py-10 ${
+          dragging ? "opacity-0" : "opacity-100"
+        }`}
       >
         <span className="absolute left-4 top-4 block h-4 w-4 border-l border-t border-black/20 md:left-8 md:top-8" />
         <span className="absolute right-4 top-4 block h-4 w-4 border-r border-t border-black/20 md:right-8 md:top-8" />
@@ -203,11 +205,7 @@ export function TearableInvitation({ onRevealed }: Props) {
           </div>
 
           <div className="flex flex-1 items-center justify-center py-16 md:py-20">
-            <div
-              className={`mx-auto flex w-full max-w-5xl flex-col items-center text-center transition-opacity duration-200 ${
-                dragging ? "opacity-0" : "opacity-100"
-              }`}
-            >
+            <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
               <div className="rule-ornament mx-auto max-w-xl" style={{ color: PAPER_GOLD }}>
                 Invitation
               </div>
@@ -260,9 +258,7 @@ export function TearableInvitation({ onRevealed }: Props) {
 
           <div className="flex items-end justify-between gap-6">
             <div
-              className={`inline-flex items-center gap-4 mono text-[0.68rem] uppercase tracking-[0.38em] transition-opacity duration-200 ${
-                dragging ? "opacity-0" : "opacity-100"
-              }`}
+              className="inline-flex items-center gap-4 mono text-[0.68rem] uppercase tracking-[0.38em]"
               style={{ color: "rgba(24, 21, 18, 0.58)" }}
             >
               <span className="block h-px w-10" style={{ backgroundColor: "rgba(24, 21, 18, 0.18)" }} />
@@ -284,7 +280,9 @@ export function TearableInvitation({ onRevealed }: Props) {
           setHidden(true);
           onRevealed();
         }}
-        className="absolute bottom-6 right-6 pointer-events-auto inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors duration-300 hover:bg-black/5 md:bottom-10 md:right-10"
+        className={`absolute bottom-6 right-6 inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors duration-200 hover:bg-black/5 md:bottom-10 md:right-10 ${
+          dragging ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100"
+        }`}
         style={{
           borderColor: "rgba(24, 21, 18, 0.16)",
           color: PAPER_INK,
