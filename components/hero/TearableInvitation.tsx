@@ -12,6 +12,8 @@ const SPACING = 44;
 const TEAR_DISTANCE = 200; // ~4.5x SPACING
 const TEAR_RADIUS = 75; // drag-tear radius, larger than SPACING
 const IDLE_AUTO_REVEAL_MS = 14000;
+const MIN_TORN_CONSTRAINTS_TO_REVEAL = 85;
+const MIN_INTEGRITY_TO_KEEP_INVITATION = 0.956;
 const PAPER_COLOR = "#ece1c9";
 const PAPER_INK = "#181512";
 const PAPER_GOLD = "#8c7340";
@@ -68,6 +70,19 @@ export function TearableInvitation({ onRevealed }: Props) {
     let mouseY = -9999;
     let mouseDown = false;
     let lastInteraction = performance.now();
+    let totalTornConstraints = 0;
+
+    const revealInvitation = () => {
+      if (revealed) return;
+      revealed = true;
+      setDragging(false);
+      setHidden(true);
+      onRevealed();
+    };
+
+    const hasMeaningfulTear = () =>
+      totalTornConstraints >= MIN_TORN_CONSTRAINTS_TO_REVEAL ||
+      cloth.integrity() < MIN_INTEGRITY_TO_KEEP_INVITATION;
 
     const onPointerDown = (e: PointerEvent) => {
       mouseDown = true;
@@ -80,12 +95,18 @@ export function TearableInvitation({ onRevealed }: Props) {
       mouseX = e.clientX;
       mouseY = e.clientY;
       if (mouseDown) {
-        cloth.tearAt(mouseX, mouseY, TEAR_RADIUS);
+        totalTornConstraints += cloth.tearAt(mouseX, mouseY, TEAR_RADIUS);
         lastInteraction = performance.now();
       }
     };
     const onPointerUp = () => {
       mouseDown = false;
+
+      if (!revealed && hasMeaningfulTear()) {
+        revealInvitation();
+        return;
+      }
+
       setDragging(false);
     };
 
@@ -125,17 +146,7 @@ export function TearableInvitation({ onRevealed }: Props) {
         !revealed &&
         performance.now() - lastInteraction > IDLE_AUTO_REVEAL_MS
       ) {
-        revealed = true;
-        setDragging(false);
-        setHidden(true);
-        onRevealed();
-      }
-
-      if (!revealed && cloth.integrity() < 0.35) {
-        revealed = true;
-        setDragging(false);
-        setHidden(true);
-        onRevealed();
+        revealInvitation();
       }
 
       rafId = requestAnimationFrame(tick);
