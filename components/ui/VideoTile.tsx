@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { attemptVideoAutoplay } from "@/lib/video";
+import { bindVideoAutoplay } from "@/lib/video";
 
 interface Props {
   poster: string;
@@ -17,26 +17,31 @@ export function VideoTile({ poster, srcMp4, srcWebm, caption, aspect = "video" }
     const v = ref.current;
     if (!v) return;
 
-    const tryPlay = () => attemptVideoAutoplay(v);
+    let stopAutoplaySync = () => {};
+    const startAutoplaySync = () => {
+      stopAutoplaySync();
+      stopAutoplaySync = bindVideoAutoplay(v);
+    };
+
     const obs = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) tryPlay();
-        else v.pause();
+        if (e.isIntersecting) {
+          startAutoplaySync();
+          return;
+        }
+
+        stopAutoplaySync();
+        v.pause();
       },
       { threshold: 0.35 }
     );
 
-    tryPlay();
-    v.addEventListener("loadedmetadata", tryPlay);
-    v.addEventListener("canplay", tryPlay);
-    document.addEventListener("visibilitychange", tryPlay);
+    startAutoplaySync();
     obs.observe(v);
 
     return () => {
       obs.disconnect();
-      v.removeEventListener("loadedmetadata", tryPlay);
-      v.removeEventListener("canplay", tryPlay);
-      document.removeEventListener("visibilitychange", tryPlay);
+      stopAutoplaySync();
     };
   }, []);
 

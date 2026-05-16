@@ -1,75 +1,61 @@
 "use client";
-import { useEffect, useRef, useSyncExternalStore } from "react";
-import { attemptVideoAutoplay } from "@/lib/video";
+import { useEffect, useRef, useState } from "react";
+import { bindVideoAutoplay } from "@/lib/video";
 
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-// Subscribe to OS-level reduced-motion changes. Module-scoped so its identity
-// stays stable across renders and useSyncExternalStore never re-subscribes.
-function subscribeReducedMotion(callback: () => void) {
-  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-}
+const HERO_VIDEO_SRC = "/video/hero.mp4";
+const HERO_VIDEO_FALLBACK_SRC = "/video/hero-sd.mp4";
 
 /**
  * Cinematic backdrop for the hero. A short reel of The Avenues — its
  * crisscrossing concrete staircases and planted boulevards — plays behind the
  * typography, layered with atmospheric warm blooms, a vignette and grain.
- * Viewers who prefer reduced motion get a still poster frame instead of video.
  */
 export function HeroScene() {
-  const reduceMotion = useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
-    () => false,
-  );
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoSrc, setVideoSrc] = useState(HERO_VIDEO_SRC);
 
-  // Browsers only autoplay muted video, and Safari occasionally needs an
-  // explicit nudge — force muted on the element and call play() once mounted.
+  // Some desktop browsers defer muted autoplay until the media is ready or the
+  // user touches the page. Keep retrying on those browser lifecycle events.
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || reduceMotion) return;
+    if (!video) return;
 
-    const retryAutoplay = () => attemptVideoAutoplay(video);
+    const fallbackToSd = () => {
+      if (videoSrc === HERO_VIDEO_FALLBACK_SRC) return;
+      setVideoSrc(HERO_VIDEO_FALLBACK_SRC);
+    };
 
-    retryAutoplay();
-    video.addEventListener("loadedmetadata", retryAutoplay);
-    video.addEventListener("canplay", retryAutoplay);
-    document.addEventListener("visibilitychange", retryAutoplay);
+    const stallCheck = window.setTimeout(() => {
+      if (video.currentTime > 0) return;
+      fallbackToSd();
+    }, 4000);
+
+    const stopAutoplaySync = bindVideoAutoplay(video);
+    video.addEventListener("error", fallbackToSd);
+    video.addEventListener("stalled", fallbackToSd);
 
     return () => {
-      video.removeEventListener("loadedmetadata", retryAutoplay);
-      video.removeEventListener("canplay", retryAutoplay);
-      document.removeEventListener("visibilitychange", retryAutoplay);
+      window.clearTimeout(stallCheck);
+      stopAutoplaySync();
+      video.removeEventListener("error", fallbackToSd);
+      video.removeEventListener("stalled", fallbackToSd);
     };
-  }, [reduceMotion]);
+  }, [videoSrc]);
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink" aria-hidden>
-      {/* Base layer: a cinematic reel of the mall interior. Reduced-motion
-          viewers get the poster frame as a still image instead of the video. */}
-      {reduceMotion ? (
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url(/video/hero-poster.jpg)" }}
-        />
-      ) : (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
-          poster="/video/hero-poster.jpg"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-        >
-          <source src="/video/hero.mp4" type="video/mp4" />
-        </video>
-      )}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full object-cover"
+        poster="/video/hero-poster.jpg"
+        src={videoSrc}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
 
       {/* Midnight cast — dark enough that the typography reads cleanly, light
           enough that the reel stays vivid behind it. */}
