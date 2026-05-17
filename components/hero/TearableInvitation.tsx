@@ -14,9 +14,9 @@ const TEAR_RADIUS = 75; // drag-tear radius, larger than SPACING
 const IDLE_AUTO_REVEAL_MS = 14000;
 const MIN_TORN_CONSTRAINTS_TO_REVEAL = 85;
 const MIN_INTEGRITY_TO_KEEP_INVITATION = 0.956;
-const PAPER_COLOR = "#ece1c9";
-const PAPER_INK = "#181512";
-const PAPER_GOLD = "#8c7340";
+// The torn sheet is a dark cover, continuous with the deck behind it — tearing
+// it open reveals the cinematic hero rather than flipping from light to dark.
+const PAPER_COLOR = "#08080c";
 
 interface Props {
   onRevealed: () => void;
@@ -177,113 +177,84 @@ export function TearableInvitation({ onRevealed }: Props) {
         ref={canvasRef}
         className={`absolute inset-0 ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
       />
+
+      {/* Invitation chrome — pointer-events-none so the canvas underneath receives
+          the tear gesture. The whole layer fades while the page is being torn. */}
       <div
-        className={`pointer-events-none absolute inset-0 px-6 py-6 transition-opacity duration-200 md:px-10 md:py-10 ${
+        className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
           dragging ? "opacity-0" : "opacity-100"
         }`}
       >
-        <span className="absolute left-4 top-4 block h-4 w-4 border-l border-t border-black/20 md:left-8 md:top-8" />
-        <span className="absolute right-4 top-4 block h-4 w-4 border-r border-t border-black/20 md:right-8 md:top-8" />
-        <span className="absolute bottom-4 left-4 block h-4 w-4 border-b border-l border-black/20 md:bottom-8 md:left-8" />
-        <span className="absolute bottom-4 right-4 block h-4 w-4 border-b border-r border-black/20 md:bottom-8 md:right-8" />
-        <span className="absolute inset-3 border border-black/8 md:inset-6" />
+        {/* Warm vault bloom rising from the base */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-[60vh]"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 100%, rgba(201,169,110,0.12) 0%, rgba(201,169,110,0.04) 38%, transparent 72%)",
+          }}
+        />
+        {/* Cinematic vignette */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 42%, transparent 46%, rgba(5,5,8,0.62) 100%)",
+          }}
+        />
 
-        <div className="relative flex h-full flex-col">
-          <div className="flex items-start justify-between gap-6">
-            <div className="max-w-sm">
-              <p
-                className="mono text-[0.62rem] uppercase tracking-[0.38em]"
-                style={{ color: PAPER_GOLD }}
-              >
-                The Avenues · Kuwait
-              </p>
-              <p
-                className="mt-4 text-sm leading-relaxed md:text-[0.95rem]"
-                style={{ color: "rgba(24, 21, 18, 0.62)" }}
-              >
-                A tactile invitation into the property story behind Kuwait&apos;s
-                most ambitious retail address.
-              </p>
-            </div>
+        {/* Single hairline frame */}
+        <div className="absolute inset-6 border border-gold/20 md:inset-10" />
 
-            <div
-              className="hidden items-center gap-4 mono text-[0.58rem] uppercase tracking-[0.35em] md:flex"
-              style={{ color: "rgba(24, 21, 18, 0.5)" }}
-            >
-              <span className="block h-px w-12" style={{ backgroundColor: "rgba(24, 21, 18, 0.18)" }} />
-              <span>Slide 00 / 09</span>
-            </div>
+        {/* Eyebrow */}
+        <div className="absolute inset-x-0 top-8 flex items-center justify-center gap-3 md:top-12">
+          <span className="lozenge" />
+          <span className="mono text-[0.6rem] uppercase tracking-[0.38em] text-gold">
+            The Avenues · Kuwait
+          </span>
+        </div>
+
+        {/* Optical-centre composition */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+          <div className="rule-ornament mx-auto w-full max-w-md">
+            <span className="italic-display text-[1.5rem] leading-none md:text-[1.85rem]">
+              Invitation
+            </span>
           </div>
 
-          <div className="flex flex-1 items-center justify-center py-16 md:py-20">
-            <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
-              <div className="rule-ornament mx-auto max-w-xl" style={{ color: PAPER_GOLD }}>
-                Invitation
-              </div>
-              <h2
-                className="display mt-8 max-w-5xl text-[clamp(3rem,8vw,8rem)] leading-[0.9]"
-                style={{ color: PAPER_INK }}
-              >
-                A private look
-                <span className="block" style={{ color: PAPER_GOLD }}>
-                  inside The Avenues.
-                </span>
-              </h2>
-              <p
-                className="mt-8 max-w-3xl text-base leading-relaxed md:text-xl"
-                style={{ color: "rgba(24, 21, 18, 0.68)" }}
-              >
-                Twelve districts. One destination. Press and drag anywhere across
-                the paper to tear the invitation open and enter the deck.
-              </p>
-              <div
-                className="mt-8 inline-flex items-center gap-4 border px-6 py-4 mono text-[0.72rem] uppercase tracking-[0.38em] md:px-8 md:py-4 md:text-[0.8rem]"
-                style={{
-                  borderColor: "rgba(24, 21, 18, 0.16)",
-                  color: PAPER_INK,
-                  backgroundColor: "rgba(255, 255, 255, 0.16)",
-                }}
-              >
-                <span className="lozenge" />
-                <span>Press + drag to tear open</span>
-              </div>
-              <div
-                className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mono text-[0.62rem] uppercase tracking-[0.35em]"
-                style={{ color: "rgba(24, 21, 18, 0.52)" }}
-              >
-                <span className="inline-flex items-center gap-3">
-                  <span className="lozenge" />
-                  13M square feet
-                </span>
-                <span className="inline-flex items-center gap-3">
-                  <span className="lozenge" />
-                  12 districts
-                </span>
-                <span className="inline-flex items-center gap-3">
-                  <span className="lozenge" />
-                  30M annual visits
-                </span>
-              </div>
-            </div>
-          </div>
+          <h2 className="display mt-8 text-[clamp(2.5rem,5vw,4.75rem)] leading-[0.95]">
+            <span className="block text-bone">A private look</span>
+            <span className="italic-display block text-gold">
+              inside The Avenues.
+            </span>
+          </h2>
 
-          <div className="flex items-end justify-between gap-6">
-            <div
-              className="inline-flex items-center gap-4 mono text-[0.68rem] uppercase tracking-[0.38em]"
-              style={{ color: "rgba(24, 21, 18, 0.58)" }}
-            >
-              <span className="block h-px w-10" style={{ backgroundColor: "rgba(24, 21, 18, 0.18)" }} />
-              <span>Drag anywhere to tear</span>
-            </div>
-            <p
-              className="hidden text-right text-sm leading-relaxed md:block"
-              style={{ color: "rgba(24, 21, 18, 0.48)" }}
-            >
-              Best experienced with sound on after the reveal.
-            </p>
-          </div>
+          <p className="mt-6 max-w-xl text-[0.95rem] leading-relaxed text-sand/70">
+            Twelve districts. One destination. The world&apos;s second-largest
+            mall.
+          </p>
+        </div>
+
+        {/* Tear cue */}
+        <div className="absolute inset-x-0 bottom-[14vh] flex flex-col items-center gap-4">
+          <span
+            className="block h-px w-28"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(to right, rgba(201,169,110,0.5) 0 2px, transparent 2px 6px)",
+            }}
+          />
+          <span className="flex items-center gap-3 mono text-[0.6rem] uppercase tracking-[0.38em] text-gold">
+            <span className="lozenge" />
+            Tear to enter
+            <span className="lozenge" />
+          </span>
+          <p className="text-[0.7rem] tracking-wider text-sand/40">
+            press and drag anywhere to tear the page open
+          </p>
         </div>
       </div>
+
+      {/* Skip — the only interactive chrome; a discreet text affordance */}
       <button
         type="button"
         onClick={() => {
@@ -291,17 +262,11 @@ export function TearableInvitation({ onRevealed }: Props) {
           setHidden(true);
           onRevealed();
         }}
-        className={`absolute bottom-6 right-6 inline-flex items-center gap-3 border px-5 py-3 mono text-[0.62rem] uppercase tracking-[0.34em] transition-colors duration-200 hover:bg-black/5 md:bottom-10 md:right-10 ${
+        className={`absolute bottom-6 right-6 mono text-[0.58rem] uppercase tracking-[0.34em] text-bone/35 transition-colors duration-300 hover:text-gold md:bottom-10 md:right-10 ${
           dragging ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100"
         }`}
-        style={{
-          borderColor: "rgba(24, 21, 18, 0.16)",
-          color: PAPER_INK,
-          backgroundColor: "rgba(255, 255, 255, 0.18)",
-        }}
       >
-        <span className="lozenge" />
-        Skip intro →
+        Skip intro
       </button>
     </div>
   );
