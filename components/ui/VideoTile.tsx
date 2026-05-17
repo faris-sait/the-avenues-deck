@@ -7,7 +7,7 @@ interface Props {
   srcMp4: string;
   srcWebm?: string;
   caption?: string;
-  aspect?: "video" | "square" | "portrait";
+  aspect?: "video" | "square" | "portrait" | "fill";
 }
 
 export function VideoTile({ poster, srcMp4, srcWebm, caption, aspect = "video" }: Props) {
@@ -33,7 +33,7 @@ export function VideoTile({ poster, srcMp4, srcWebm, caption, aspect = "video" }
         stopAutoplaySync();
         v.pause();
       },
-      { threshold: 0.35 }
+      { threshold: 0.1 }
     );
 
     startAutoplaySync();
@@ -45,16 +45,18 @@ export function VideoTile({ poster, srcMp4, srcWebm, caption, aspect = "video" }
     };
   }, []);
 
-  const aspectClass =
-    aspect === "square"
-      ? "aspect-square"
-      : aspect === "portrait"
-      ? "aspect-[3/4]"
-      : "aspect-video";
+  const useFill = aspect === "fill";
+  const aspectClass = useFill
+    ? "flex-1 min-h-0"
+    : aspect === "square"
+    ? "aspect-square"
+    : aspect === "portrait"
+    ? "aspect-[3/4]"
+    : "aspect-video";
 
   return (
-    <figure className="space-y-3">
-      <div className={`${aspectClass} overflow-hidden bg-charcoal`}>
+    <figure className={useFill ? "flex h-full flex-col" : "space-y-3"}>
+      <div className={`${aspectClass} overflow-hidden bg-charcoal ${useFill ? "ring-1 ring-bone/10" : ""}`}>
         <video
           ref={ref}
           className="h-full w-full object-cover"
@@ -70,7 +72,8 @@ export function VideoTile({ poster, srcMp4, srcWebm, caption, aspect = "video" }
         </video>
       </div>
       {caption && (
-        <figcaption className="text-xs uppercase tracking-[0.25em] opacity-50">
+        <figcaption className={`flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.3em] opacity-70 ${useFill ? "mt-3" : ""}`}>
+          <span className="lozenge" />
           {caption}
         </figcaption>
       )}
