@@ -1,7 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { PosterTile } from "@/components/atmosphere/PosterTile";
-import { HeroVideo } from "@/components/hero/HeroVideo";
 import { Kpi } from "@/components/ui/Kpi";
 import type { Kpi as KpiData } from "@/content/kpis";
 
@@ -37,11 +37,17 @@ export default function PrestigePage() {
     <main>
       {/* Hero */}
       <section className="relative min-h-screen flex items-end pb-24 px-6 md:px-16 overflow-hidden bg-[#1a0d0d]">
-        {/* Atmospheric backdrop — looping Prestige atrium reel */}
+        {/* Atmospheric backdrop — official Prestige atrium photography */}
         <div className="absolute inset-0">
-          <HeroVideo
-            poster="/img/districts/prestige-atrium-official.jpg"
-            srcMp4="/video/prestige-atrium-loop.mp4"
+          <Image
+            src="/img/districts/prestige-atrium-official.jpg"
+            alt=""
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover"
+            style={{ objectPosition: "center" }}
           />
           <div
             className="absolute inset-0"
