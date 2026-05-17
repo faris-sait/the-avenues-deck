@@ -241,7 +241,7 @@ export function DistrictMap() {
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill={isActive ? "#08080c" : "#f5ecd9"}
-                    fontSize="13"
+                    fontSize="14.5"
                     fontFamily="var(--font-display)"
                     style={{
                       fontVariationSettings: '"opsz" 144, "SOFT" 0, "WONK" 0',
