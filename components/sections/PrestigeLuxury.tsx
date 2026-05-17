@@ -27,7 +27,7 @@ export function PrestigeLuxury() {
       <div className="grid lg:grid-cols-[1.6fr_1fr] gap-8 flex-1 min-h-0 items-stretch">
         {/* Hero poster */}
         <div className="min-h-0">
-          <PosterTile variant="prestige-concourse" caption="The concourse · golden hour" aspect="fill" />
+          <PosterTile variant="prestige-concourse" caption="Prestige atrium · double-height arrival" aspect="fill" />
         </div>
 
         {/* KPI stack */}

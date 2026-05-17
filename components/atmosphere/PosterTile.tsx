@@ -2,10 +2,10 @@ import Image from "next/image";
 
 /**
  * An editorial image tile keyed by `variant` for backward-compatibility.
- * Each variant resolves to a real photograph of The Avenues (sourced from
- * the official property site, /public/img/districts/*) and is framed with
- * corner ticks, a grain layer, and an optional caption to match the deck's
- * paper/architectural plate language.
+ * Each variant resolves to official photography of The Avenues from
+ * /public/img/districts/* and is framed with corner ticks, a grain layer,
+ * and an optional caption to match the deck's paper/architectural plate
+ * language.
  */
 
 type Variant =
@@ -37,84 +37,82 @@ interface Plate {
 // `object-cover` crop at the section's actual tile aspect ratio.
 const PLATES: Record<Variant, Plate> = {
   "prestige-concourse": {
-    src: "/img/districts/prestige.jpg",
-    alt: "The Prestige concourse at The Avenues, Kuwait",
-    position: "center 35%",
+    src: "/img/districts/prestige-atrium-official.jpg",
+    alt: "The Prestige atrium at The Avenues, Kuwait",
+    position: "center 54%",
     tint: "amber",
   },
   "prestige-maison": {
-    src: "/img/districts/forum.jpg",
-    alt: "Maison-style retail interior at The Avenues",
-    position: "center 40%",
+    src: "/img/districts/prestige-lifestyle-official.jpg",
+    alt: "Luxury clientele in the Prestige district at The Avenues",
+    position: "34% 45%",
     tint: "warm",
   },
   "prestige-atelier": {
-    src: "/img/districts/second-avenue.jpg",
-    alt: "Atelier floor at The Avenues",
-    position: "center 40%",
+    src: "/img/districts/prestige-corridor-official.jpg",
+    alt: "Luxury retail corridor in the Prestige district at The Avenues",
+    position: "center 50%",
     tint: "warm",
   },
   "prestige-vitrines": {
-    src: "/img/districts/arcades.jpg",
-    alt: "Flagship vitrines along The Arcades",
-    position: "center 45%",
+    src: "/img/districts/prestige-corridor-official.jpg",
+    alt: "Luxury retail corridor in the Prestige district at The Avenues",
+    position: "center 50%",
     tint: "amber",
   },
   "prestige-watches": {
-    src: "/img/districts/first-avenue-2.jpg",
-    alt: "Watch atelier corridor at The Avenues",
-    position: "center 45%",
+    src: "/img/districts/prestige-lifestyle-official.jpg",
+    alt: "Luxury shopper in the Prestige district at The Avenues",
+    position: "34% 45%",
     tint: "warm",
   },
-  // Photo: Jassem1992 / Wikimedia Commons / CC BY-SA 4.0
-  // https://creativecommons.org/licenses/by-sa/4.0 — needs a visible credit
   "prestige-couture": {
-    src: "/img/districts/prestige-dome.jpg",
-    alt: "The glass-domed atrium of The Prestige at The Avenues, Kuwait",
-    position: "center 30%",
+    src: "/img/districts/prestige-dome-official.jpg",
+    alt: "The glass-domed atrium of the Prestige district at The Avenues",
+    position: "center 34%",
     tint: "warm",
   },
   "grand-circus": {
-    src: "/img/districts/grand-avenue.jpg",
+    src: "/img/districts/grand-avenue-dome-official.jpg",
     alt: "The Circus — 70m ETFE dome over Grand Avenue",
-    position: "center 30%",
+    position: "center 48%",
     tint: "warm",
   },
   "grand-boulevard": {
-    src: "/img/districts/overview.jpg",
+    src: "/img/districts/grand-avenue-gardens-official.jpg",
     alt: "Grand Avenue boulevard at The Avenues",
-    position: "center 35%",
+    position: "center 52%",
     tint: "warm",
   },
   "grand-dining": {
-    src: "/img/districts/gardens.jpg",
+    src: "/img/districts/grand-avenue-gardens-official.jpg",
     alt: "Grand Avenue dining and gardens",
-    position: "center 50%",
+    position: "center 52%",
     tint: "warm",
   },
   "grand-etfe": {
-    src: "/img/districts/grand-avenue.jpg",
+    src: "/img/districts/grand-avenue-dome-official.jpg",
     alt: "The ETFE roof above Grand Avenue",
-    position: "center 15%",
+    position: "center 28%",
     tint: "cool",
   },
   "soku-evening": {
-    src: "/img/districts/soku.jpg",
+    src: "/img/districts/soku-official.jpg",
     alt: "SoKu district at The Avenues",
-    position: "center 45%",
+    position: "center 52%",
     tint: "cool",
   },
   "events-plaza": {
-    src: "/img/districts/grand-plaza.jpg",
+    src: "/img/districts/grand-plaza-official.jpg",
     alt: "Grand Plaza events venue at The Avenues",
-    position: "center 35%",
+    position: "center 44%",
     tint: "amber",
   },
   "events-activation": {
-    src: "/img/districts/electra.jpg",
-    alt: "Brand activation space at Electra",
+    src: "/img/districts/events-activation-official.jpg",
+    alt: "High-footfall activation corridor at The Avenues",
     position: "center 50%",
-    tint: "warm",
+    tint: "cool",
   },
 };
 

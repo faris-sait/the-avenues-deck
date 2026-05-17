@@ -37,13 +37,14 @@ export default function PrestigePage() {
     <main>
       {/* Hero */}
       <section className="relative min-h-screen flex items-end pb-24 px-6 md:px-16 overflow-hidden bg-[#1a0d0d]">
-        {/* Atmospheric backdrop — real Prestige concourse photograph */}
+        {/* Atmospheric backdrop — official Prestige atrium photography */}
         <div className="absolute inset-0">
           <Image
-            src="/img/districts/prestige.jpg"
+            src="/img/districts/prestige-atrium-official.jpg"
             alt=""
             fill
             priority
+            quality={90}
             sizes="100vw"
             className="object-cover"
             style={{ objectPosition: "center" }}
@@ -104,9 +105,9 @@ export default function PrestigePage() {
 
       <SectionShell id="tenants" eyebrow="Tenants" index="03 / 04" title="Maisons in residence.">
         <div className="grid md:grid-cols-3 gap-6">
-          <PosterTile variant="prestige-vitrines" caption="Flagship vitrines" />
-          <PosterTile variant="prestige-watches" caption="Watch atelier" />
-          <PosterTile variant="prestige-couture" caption="Couture floor" />
+          <PosterTile variant="prestige-vitrines" caption="Luxury corridor" />
+          <PosterTile variant="prestige-watches" caption="High-value clientele" />
+          <PosterTile variant="prestige-couture" caption="Prestige dome" />
         </div>
         <p className="mt-12 text-bone/50 text-sm max-w-2xl italic-display">
           Tenant compositions illustrated for editorial context. Flagship slots
@@ -116,7 +117,7 @@ export default function PrestigePage() {
 
       <SectionShell id="activation" eyebrow="Activation" index="04 / 04" title="Imagined: a maison launch.">
         <div className="grid md:grid-cols-[2fr_1fr] gap-12 items-start">
-          <PosterTile variant="events-activation" caption="Step-and-repeat · concept" />
+          <PosterTile variant="events-activation" caption="Concourse activation · concept" />
           <div className="space-y-6">
             <p className="text-bone/85 text-lg leading-relaxed">
               A two-week takeover of the Prestige concourse: vitrine refit,
