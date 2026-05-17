@@ -99,9 +99,6 @@ export function buildInquiryEmail({
                     <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:3.2px;text-transform:uppercase;color:#c9a96e;">
                       ◆ The Avenues · Kuwait
                     </td>
-                    <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2.2px;text-transform:uppercase;color:#f5ecd9;opacity:0.46;">
-                      Interactive Sales Deck
-                    </td>
                   </tr>
                 </table>
               </td>
@@ -138,7 +135,7 @@ export function buildInquiryEmail({
                         ${company ? detailRow("Company", company) : ""}
                         ${detailRow("Email", email)}
                         ${detailRow("Intent", meta.label)}
-                        ${detailRow("Category", category ?? "—")}
+                        ${category ? detailRow("Category", category) : ""}
                       </table>
                     </td>
                     <td valign="top" style="padding:0 0 24px;">
@@ -190,7 +187,6 @@ export function buildInquiryEmail({
 
   const text = [
     "THE AVENUES · KUWAIT",
-    "Interactive Sales Deck",
     "",
     `${meta.label.toUpperCase()} INQUIRY`,
     meta.eyebrow,
@@ -200,7 +196,7 @@ export function buildInquiryEmail({
     `Company: ${company ?? "—"}`,
     `Email: ${email}`,
     `Intent: ${meta.label}`,
-    `Category: ${category ?? "—"}`,
+    ...(category ? [`Category: ${category}`] : []),
     "",
     "Message",
     message,
