@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
+import { buildInquiryEmail } from "../../../lib/inquiry-email";
 
 export const InquirySchema = z.object({
   intent: z.enum(["lease", "sponsor", "book"]),
@@ -21,6 +22,16 @@ export async function POST(req: Request) {
     );
   }
   const { intent, category, name, company, email, message } = parsed.data;
+  const deckUrl = new URL("/#action", req.url).toString();
+  const emailContent = buildInquiryEmail({
+    intent,
+    category,
+    name,
+    company,
+    email,
+    message,
+    deckUrl,
+  });
 
   const to = process.env.INQUIRY_RECIPIENT ?? "leasing@example.com";
   const apiKey = process.env.RESEND_API_KEY;
@@ -31,9 +42,10 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: `The Avenues Deck <${fromAddress}>`,
       to,
-      subject: `[${intent.toUpperCase()}${category ? ` · ${category}` : ""}] Inquiry from ${name}`,
+      subject: emailContent.subject,
       replyTo: email,
-      text: `From: ${name}${company ? ` (${company})` : ""} <${email}>\nIntent: ${intent}\nCategory: ${category ?? "—"}\n\n${message}`,
+      html: emailContent.html,
+      text: emailContent.text,
     });
   } else {
     console.warn(
