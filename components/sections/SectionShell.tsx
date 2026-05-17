@@ -20,10 +20,8 @@ const toneStyles: Record<NonNullable<Props["tone"]>, string> = {
 };
 
 /**
- * Every section is exactly one viewport tall — viewers should never need to
- * scroll inside a section. Use a flex column with the header at the top and
- * the children expanding to fill remaining height; constrain interior content
- * so it stays within the viewport on standard desktop heights (~800–1000px).
+ * Desktop sections behave like full-screen slides, but mobile sections need to
+ * expand naturally so dense content can flow vertically instead of clipping.
  */
 export function SectionShell({
   id,
@@ -37,7 +35,7 @@ export function SectionShell({
   return (
     <motion.section
       id={id}
-      className={`${toneStyles[tone]} relative h-screen min-h-[640px] flex flex-col px-6 md:px-16 py-14 md:py-16 scroll-mt-20 overflow-hidden`}
+      className={`${toneStyles[tone]} relative flex min-h-screen flex-col overflow-visible px-6 py-12 scroll-mt-20 md:h-screen md:min-h-[640px] md:overflow-hidden md:px-16 md:py-16`}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}

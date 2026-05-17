@@ -84,9 +84,9 @@ export function TakeAction() {
               <p className="mono text-[0.55rem] uppercase tracking-[0.3em] text-gold mb-2">
                 {i.sub}
               </p>
-              <div className="flex items-baseline gap-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-4">
                 <h3 className="display text-2xl md:text-3xl">{i.title}</h3>
-                <p className="text-bone/65 text-xs leading-relaxed">{i.copy}</p>
+                <p className="text-bone/65 text-sm leading-relaxed sm:text-xs">{i.copy}</p>
               </div>
               <span
                 className={`absolute bottom-0 left-0 h-px bg-gold transition-all duration-500 ${

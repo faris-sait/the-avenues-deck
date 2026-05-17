@@ -41,7 +41,7 @@ export function GrandAvenue() {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 border-t border-ink/15 pt-5">
+          <div className="grid gap-5 border-t border-ink/15 pt-5 sm:grid-cols-3">
             <div>
               <p className="eyebrow text-ink/70 mb-2">F&B</p>
               <p className="text-ink/75 text-xs leading-relaxed">

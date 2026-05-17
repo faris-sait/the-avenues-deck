@@ -7,7 +7,8 @@ import { DISTRICTS } from "@/content/districts";
 
 export function DistrictMap() {
   const [hovered, setHovered] = useState<string | null>(null);
-  const active = DISTRICTS.find((d) => d.id === hovered) ?? DISTRICTS[2];
+  const [activeId, setActiveId] = useState(DISTRICTS[2].id);
+  const active = DISTRICTS.find((d) => d.id === (hovered ?? activeId)) ?? DISTRICTS[2];
 
   return (
     <SectionShell
@@ -25,7 +26,7 @@ export function DistrictMap() {
         <>
           The Avenues is master-planned as twelve distinct districts — each with
           its own architecture, tenant mix, and atmosphere — woven together
-          beneath a single ETFE roof. Hover any district to preview.
+          beneath a single ETFE roof. Tap or hover any district to preview.
         </>
       }
     >
@@ -111,10 +112,14 @@ export function DistrictMap() {
                   key={d.id}
                   onMouseEnter={() => setHovered(d.id)}
                   onMouseLeave={() => setHovered(null)}
-                  onFocus={() => setHovered(d.id)}
+                  onFocus={() => {
+                    setActiveId(d.id);
+                    setHovered(d.id);
+                  }}
                   onBlur={() => setHovered(null)}
+                  onClick={() => setActiveId(d.id)}
                   tabIndex={0}
-                  role="link"
+                  role="button"
                   aria-label={d.name}
                   className="cursor-pointer outline-none"
                 >

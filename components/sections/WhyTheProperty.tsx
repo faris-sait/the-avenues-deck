@@ -57,7 +57,7 @@ export function WhyTheProperty() {
       </div>
 
       {/* 6-cell KPI strip */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-x-6 gap-y-8 mt-auto">
+      <div className="mt-auto grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 md:grid-cols-6">
         {strip.map((k) => (
           <div key={k.label} className="border-t border-bone/15 pt-4">
             <div className="figure text-2xl md:text-3xl">{k.value}</div>

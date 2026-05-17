@@ -42,7 +42,7 @@ export function SoKuYouth() {
             <p className="mono text-[0.6rem] uppercase tracking-[0.3em] text-bone/55 mb-3">
               Tenant categories
             </p>
-            <ul className="grid grid-cols-2 gap-y-2 text-bone/75 text-sm">
+            <ul className="grid gap-y-2 text-bone/75 text-sm sm:grid-cols-2">
               <li className="flex items-center gap-2"><span className="text-gold">◆</span> Streetwear</li>
               <li className="flex items-center gap-2"><span className="text-gold">◆</span> Sneakers</li>
               <li className="flex items-center gap-2"><span className="text-gold">◆</span> Lifestyle tech</li>
