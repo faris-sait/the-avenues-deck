@@ -16,7 +16,7 @@ export function WhyTheProperty() {
         <>
           A <span className="italic-display text-gold">four-hour flight</span>
           <br />
-          from four hundred million people.
+          from <span className="text-gold">400 million</span> people.
         </>
       }
       subtitle={
