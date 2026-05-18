@@ -33,7 +33,10 @@ export async function POST(req: Request) {
     deckUrl,
   });
 
-  const to = process.env.INQUIRY_RECIPIENT ?? "leasing@example.com";
+  const recipients = (process.env.INQUIRY_RECIPIENT ?? "leasing@example.com")
+    .split(/[,;]/)
+    .map((value) => value.trim())
+    .filter(Boolean);
   const apiKey = process.env.RESEND_API_KEY;
   const fromAddress = process.env.RESEND_FROM_EMAIL ?? "deck@noreply.invalid";
 
@@ -41,7 +44,7 @@ export async function POST(req: Request) {
     const resend = new Resend(apiKey);
     await resend.emails.send({
       from: `The Avenues Deck <${fromAddress}>`,
-      to,
+      to: recipients.length === 1 ? recipients[0] : recipients,
       subject: emailContent.subject,
       replyTo: email,
       html: emailContent.html,

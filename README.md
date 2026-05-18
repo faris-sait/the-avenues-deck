@@ -43,7 +43,13 @@ The inquiry form on the "Take Action" section works without configuration — it
 | Variable | Description |
 |---|---|
 | `RESEND_API_KEY` | Resend API key |
-| `INQUIRY_RECIPIENT` | Email address that should receive form submissions (defaults to `leasing@example.com`) |
+| `INQUIRY_RECIPIENT` | One or more comma-separated email addresses that should receive form submissions (defaults to `leasing@example.com`) |
+
+Example:
+
+```text
+INQUIRY_RECIPIENT=you@example.com,team@example.com
+```
 
 Add these in **Vercel → Project Settings → Environment Variables**, then redeploy.
 
@@ -98,6 +104,12 @@ lib/
 | **FFmpeg** | Generated a lightweight looping Prestige atrium reel from official still photography to strengthen the deck's video-first storytelling |
 
 See [`docs/ASSETS.md`](./docs/ASSETS.md) for the asset catalogue and licenses.
+
+## Inquiry email preview
+
+The live inquiry form sends a branded HTML email via Resend to the configured inquiry recipients.
+
+![Branded inquiry email preview](./docs/screenshots/inquiry-email-preview.png)
 
 ## What I'd add with more time
 
