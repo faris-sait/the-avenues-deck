@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SectionShell } from "./SectionShell";
-import { VideoTile } from "@/components/ui/VideoTile";
+import { PosterTile } from "@/components/atmosphere/PosterTile";
 
 export function PrestigeLuxury() {
   return (
@@ -25,14 +25,9 @@ export function PrestigeLuxury() {
       }
     >
       <div className="grid lg:grid-cols-[1.6fr_1fr] gap-8 flex-1 min-h-0 items-stretch">
-        {/* Hero video */}
+        {/* Hero poster */}
         <div className="min-h-0">
-          <VideoTile
-            poster="/img/districts/prestige-atrium-official.jpg"
-            srcMp4="/video/prestige-atrium-loop.mp4"
-            caption="Prestige atrium · double-height arrival"
-            aspect="fill"
-          />
+          <PosterTile variant="prestige-concourse" caption="Prestige atrium · double-height arrival" aspect="fill" />
         </div>
 
         {/* KPI stack */}
