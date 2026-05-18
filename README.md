@@ -2,7 +2,7 @@
 
 A browser-based, Digideck-style interactive sales deck for **[The Avenues, Kuwait](https://www.the-avenues.com/)** — the world's #2 largest shopping mall by GLA. Built for the Liat.ai screening assignment.
 
-**Live URL:** https://the-avenues-deck.vercel.app
+**Live URL:** https://the-avenues-deck1.vercel.app
 
 **Repository:** https://github.com/faris-sait/the-avenues-deck
 
@@ -118,7 +118,7 @@ See [`docs/ASSETS.md`](./docs/ASSETS.md) for the asset catalogue and licenses.
 
 Email to `medi@liat.ai` with:
 
-- live URL: `https://the-avenues-deck.vercel.app`
+- live URL: `https://the-avenues-deck1.vercel.app`
 - repo URL: `https://github.com/faris-sait/the-avenues-deck`
 - optional short write-up summarizing design rationale, AI usage, and what you would build next
 
