@@ -35,7 +35,7 @@ export function SectionShell({
   return (
     <motion.section
       id={id}
-      className={`${toneStyles[tone]} relative flex min-h-screen flex-col overflow-visible px-6 py-12 scroll-mt-20 md:h-screen md:min-h-[640px] md:overflow-hidden md:px-16 md:py-16`}
+      className={`${toneStyles[tone]} relative flex min-h-screen flex-col overflow-visible px-6 py-12 scroll-mt-24 md:scroll-mt-28 md:min-h-[640px] md:px-16 md:py-16 2xl:h-screen 2xl:overflow-hidden`}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}

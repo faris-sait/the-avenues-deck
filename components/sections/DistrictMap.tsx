@@ -1,94 +1,14 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionShell } from "./SectionShell";
 import { DISTRICTS } from "@/content/districts";
 
-const DISTRICT_MEDIA: Record<
-  string,
-  { src: string; alt: string; caption: string; position?: string }
-> = {
-  "first-avenue": {
-    src: "/img/districts/first-avenue-official.jpg",
-    alt: "1st Avenue at The Avenues, Kuwait",
-    caption: "1st Avenue · founding concourse",
-    position: "center 50%",
-  },
-  "second-avenue": {
-    src: "/img/districts/second-avenue-official.jpg",
-    alt: "2nd Avenue at The Avenues, Kuwait",
-    caption: "2nd Avenue · glass-roof dining district",
-    position: "center 48%",
-  },
-  prestige: {
-    src: "/img/districts/prestige-atrium-official.jpg",
-    alt: "Prestige atrium at The Avenues, Kuwait",
-    caption: "Prestige · atrium arrival",
-    position: "center 54%",
-  },
-  "grand-avenue": {
-    src: "/img/districts/grand-avenue-gardens-official.jpg",
-    alt: "Grand Avenue boulevard at The Avenues, Kuwait",
-    caption: "Grand Avenue · boulevard and gardens",
-    position: "center 52%",
-  },
-  soku: {
-    src: "/img/districts/soku-official.jpg",
-    alt: "SoKu district at The Avenues, Kuwait",
-    caption: "SoKu · youth and streetwear district",
-    position: "center 52%",
-  },
-  "the-mall": {
-    src: "/img/districts/the-mall.jpg",
-    alt: "The Mall district at The Avenues, Kuwait",
-    caption: "The Mall · family retail destination",
-    position: "center 52%",
-  },
-  "the-souk": {
-    src: "/img/districts/the-souk-official.jpg",
-    alt: "The Souk at The Avenues, Kuwait",
-    caption: "The Souk · heritage marketplace",
-    position: "center 50%",
-  },
-  "the-arcades": {
-    src: "/img/districts/arcades.jpg",
-    alt: "The Arcades at The Avenues, Kuwait",
-    caption: "The Arcades · premium connector",
-    position: "center 50%",
-  },
-  "grand-plaza": {
-    src: "/img/districts/grand-plaza-official.jpg",
-    alt: "Grand Plaza at The Avenues, Kuwait",
-    caption: "Grand Plaza · civic-scale event venue",
-    position: "center 44%",
-  },
-  electra: {
-    src: "/img/districts/electra.jpg",
-    alt: "Electra at The Avenues, Kuwait",
-    caption: "Electra · digital retail energy",
-    position: "center 50%",
-  },
-  "the-forum": {
-    src: "/img/districts/forum.jpg",
-    alt: "The Forum at The Avenues, Kuwait",
-    caption: "The Forum · mixed-use connector",
-    position: "center 50%",
-  },
-  "the-gardens": {
-    src: "/img/districts/gardens.jpg",
-    alt: "The Gardens at The Avenues, Kuwait",
-    caption: "The Gardens · planted dining courts",
-    position: "center 50%",
-  },
-};
-
 export function DistrictMap() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [activeId, setActiveId] = useState(DISTRICTS[2].id);
   const active = DISTRICTS.find((d) => d.id === (hovered ?? activeId)) ?? DISTRICTS[2];
-  const media = DISTRICT_MEDIA[active.id];
 
   return (
     <SectionShell
@@ -97,17 +17,17 @@ export function DistrictMap() {
       index="iii / ix"
       title={
         <>
-          Twelve neighborhoods.
+          <span className="block md:text-[0.9em]">Twelve neighborhoods.</span>
           <br />
-          <span className="italic-display text-gold">One destination.</span>
+          <span className="italic-display text-gold md:text-[0.88em]">One destination.</span>
         </>
       }
       subtitle={
-        <>
+        <span className="md:text-[0.94em]">
           The Avenues is master-planned as twelve distinct districts — each with
           its own architecture, tenant mix, and atmosphere — woven together
           beneath a single ETFE roof. Tap or hover any district to preview.
-        </>
+        </span>
       }
     >
       <div className="grid lg:grid-cols-[1.7fr_1fr] gap-10 lg:gap-14 items-start">
@@ -258,7 +178,7 @@ export function DistrictMap() {
         </figure>
 
         {/* Detail panel */}
-        <div className="lg:sticky lg:top-32 min-h-[24rem]">
+        <div className="lg:sticky lg:top-28 min-h-[24rem]">
           <AnimatePresence mode="wait">
             <motion.article
               key={active.id}
@@ -268,40 +188,21 @@ export function DistrictMap() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="border-t border-bone/15 pt-6"
             >
-              <figure className="mb-6">
-                <div className="relative aspect-[16/10] overflow-hidden ring-1 ring-bone/10 bg-vault">
-                  <Image
-                    src={media.src}
-                    alt={media.alt}
-                    fill
-                    sizes="(min-width: 1024px) 30vw, 100vw"
-                    quality={90}
-                    className="object-cover"
-                    style={{ objectPosition: media.position ?? "center" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-ink/5" />
-                </div>
-                <figcaption className="mt-3 flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.3em] text-bone/60">
-                  <span className="lozenge" />
-                  {media.caption}
-                </figcaption>
-              </figure>
-
-              <div className="flex items-baseline justify-between mb-6">
+              <div className="mb-4 flex items-baseline justify-between">
                 <p className="eyebrow">{active.name}</p>
                 <p className="mono text-[0.55rem] uppercase tracking-[0.4em] text-bone/40">
                   District {String(DISTRICTS.findIndex((d) => d.id === active.id) + 1).padStart(2, "0")}
                 </p>
               </div>
-              <h3 className="display text-3xl md:text-4xl leading-tight mb-6">
+              <h3 className="display mb-4 text-[2.15rem] leading-tight md:text-[2.65rem]">
                 {active.tagline}
               </h3>
-              <p className="text-bone/80 mb-8 leading-relaxed">
+              <p className="mb-6 text-bone/80 leading-relaxed">
                 {active.description}
               </p>
-              <ul className="mb-8 space-y-2">
+              <ul className="mb-6 space-y-1.5">
                 {active.features.map((f) => (
-                  <li key={f} className="flex items-start gap-3 text-bone/70 text-sm">
+                  <li key={f} className="flex items-start gap-3 text-[0.92rem] text-bone/70">
                     <span className="text-gold mt-1.5">┄</span>
                     <span>{f}</span>
                   </li>
