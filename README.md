@@ -114,14 +114,6 @@ See [`docs/ASSETS.md`](./docs/ASSETS.md) for the asset catalogue and licenses.
 - `npm run build`
 - Browser QA performed with `agent-browser` across desktop, tablet/mobile viewport checks, invitation flow, autoplay behavior, and CTA paths
 
-## Submission
-
-Email to `medi@liat.ai` with:
-
-- live URL: `https://the-avenues-deck1.vercel.app`
-- repo URL: `https://github.com/faris-sait/the-avenues-deck`
-- optional short write-up summarizing design rationale, AI usage, and what you would build next
-
 ## Credits
 
 - Content references: [The Avenues (Wikipedia)](https://en.wikipedia.org/wiki/The_Avenues_(Kuwait)), [The Avenues official site](https://www.the-avenues.com/kuwait/en/about), [Gensler project page](https://www.gensler.com/projects/the-avenues), [List of largest malls (Wikipedia)](https://en.wikipedia.org/wiki/List_of_largest_shopping_malls)
