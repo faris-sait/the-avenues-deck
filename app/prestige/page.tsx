@@ -134,7 +134,7 @@ export default function PrestigePage() {
         </div>
         <div className="mt-16">
           <Link
-            href="/#action"
+            href="/?reveal=1#action"
             className="inline-flex items-center gap-4 bg-gold text-ink px-8 py-5 mono text-[0.65rem] uppercase tracking-[0.4em] hover:bg-bone transition-colors"
           >
             <span>Inquire about Prestige</span>

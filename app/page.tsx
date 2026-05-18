@@ -12,10 +12,19 @@ import { TakeAction } from "@/components/sections/TakeAction";
 // Single-page deck — every section is server-rendered and scrollable from load.
 // DeckChrome layers the tearable-paper invitation over the deck on first load,
 // then fades in the nav + progress rail once the paper is torn (or skipped) away.
-export default function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const reveal = (await searchParams).reveal;
+  const bypassInvitation = Array.isArray(reveal)
+    ? reveal.includes("1")
+    : reveal === "1";
+
   return (
     <>
-      <DeckChrome />
+      <DeckChrome initialRevealed={bypassInvitation} />
       <main>
         <Hero />
         <WhyTheProperty />
