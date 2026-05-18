@@ -211,12 +211,13 @@ export function DistrictMap() {
               {active.id === "prestige" && (
                 <Link
                   href="/prestige"
-                  className="inline-flex items-center gap-3 group"
+                  className="group inline-flex items-center gap-4 border border-gold/30 bg-gold/5 px-5 py-3 transition-colors duration-300 hover:border-gold hover:bg-gold/10"
                 >
-                  <span className="mono text-[0.6rem] uppercase tracking-[0.4em] text-gold">
+                  <span className="mono text-[0.68rem] uppercase tracking-[0.34em] text-gold md:text-[0.72rem]">
                     Open the prestige module
                   </span>
-                  <span className="block h-px w-10 bg-gold group-hover:w-20 transition-all duration-500" />
+                  <span className="block h-px w-12 bg-gold/45 transition-all duration-500 group-hover:w-20 group-hover:bg-gold" />
+                  <span className="text-gold text-base leading-none">→</span>
                 </Link>
               )}
             </motion.article>

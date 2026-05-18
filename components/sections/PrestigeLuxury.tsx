@@ -55,15 +55,15 @@ export function PrestigeLuxury() {
 
           <Link
             href="/prestige"
-            className="inline-flex items-center gap-4 group self-start"
+            className="group inline-flex self-start items-center gap-4 border border-gold/30 bg-gold/5 px-5 py-3 transition-colors duration-300 hover:border-gold hover:bg-gold/10"
           >
-            <span className="mono text-[0.65rem] uppercase tracking-[0.4em] text-gold">
+            <span className="mono text-[0.72rem] uppercase tracking-[0.34em] text-gold">
               Open the Prestige module
             </span>
-            <span className="relative block h-px w-12 bg-gold/40 overflow-hidden">
+            <span className="relative block h-px w-14 bg-gold/40 overflow-hidden">
               <span className="absolute inset-0 bg-gold translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
             </span>
-            <span className="text-gold text-lg leading-none">→</span>
+            <span className="text-gold text-xl leading-none">→</span>
           </Link>
         </div>
       </div>
